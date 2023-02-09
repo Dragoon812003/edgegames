@@ -6,8 +6,6 @@ from django.contrib.auth import login, logout, authenticate
 from django.core.mail import send_mail, mail_admins
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from django.utils.timezone import make_aware
-from django.db.models.signals import post_delete
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.dispatch import receiver
@@ -40,9 +38,9 @@ def upload_game(request):
             description=request.POST['game-description'],
             developer=request.user,
             profile_picture = profile_pic,
-            is_available_on_mobile = True if request.POST.get('is_mobile') == "yes" else False,
-            is_available_on_tablet = True if request.POST.get('is_tablet') == "yes" else False,
-            is_available_on_desktop = True if request.POST.get('is_pc') == "yes" else False,
+            is_available_on_mobile = request.POST.get('is_mobile') == "yes",
+            is_available_on_tablet = request.POST.get('is_tablet') == "yes",
+            is_available_on_desktop = request.POST.get('is_pc') == "yes",
         )
         
         game.save()
@@ -77,7 +75,33 @@ def faviorates_view(request):
 def update_game(request):
     game = Game.objects.get(id=request.POST.get("game_id"))
     if request.method == "POST" and request.user == game.developer:
-        pass
+        game.description = request.POST.get('game-description')
+        game.is_available_on_mobile = request.POST.get('is_mobile') == "yes"
+        game.is_available_on_tablet = request.POST.get('is_tablet') == "yes"
+        game.is_available_on_desktop = request.POST.get('is_pc') == "yes"
+        game.profile_picture.delete(save=False)
+
+        game.profile_picture = request.FILES.get('game-profile-pic')
+        uploaded_files = request.FILES.getlist('game-files')
+        game_images = request.FILES.getlist('game-images')
+
+        for game_file in game.gamefile_set.all():
+            game_file.file.delete(save=False)
+
+        for image in game.imagefile_set.all():
+            image.image.delete(save=False)
+
+        for file in uploaded_files:
+            game_file = GameFile.objects.create(file=file, game=game)
+            game_file.save()
+
+        for image in game_images:
+            game_image = ImageFile.objects.create(image=image, game=game)
+            game_image.save()
+
+        game.save()
+        messages.success(request, "your game has been updated successfully!")
+        return redirect(reverse('game_view', args=[game.slug]))
     else:
         return redirect(reverse('home'))
 
@@ -97,10 +121,6 @@ def delete_game(request):
         game.delete()
         messages.success(request, f"{game.title} was deleted successfully!")
     return redirect(reverse('home'))
-
-# @receiver(post_delete, sender=Game)
-# def submission_delete(sender, instance, **kwargs):
-#     instance.profile_picture.delete(False)
     
 def update_game_view(request, game_slug):
     game = Game.objects.get(slug = game_slug)

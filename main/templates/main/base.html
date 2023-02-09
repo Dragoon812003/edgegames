@@ -11,6 +11,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/logo.png' %}"/>
     {% block links %}
     {% endblock %}
 
@@ -48,8 +49,8 @@
                 </ul>
             </div>
             <div class="items-center md:order-2">
-                <button id="user-menu-button" type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0">
-                    <div class="inline-flex overflow-hidden relative justify-center items-center w-8 h-8 mx-1 bg-white rounded-full border-2 border-blue-600 dark:bg-gray-600">
+                <button id="user-menu-button" type="button" class="flex mr-3 text-sm rounded-full md:mr-0">
+                    <div class="inline-flex overflow-hidden relative justify-center items-center w-10 h-10 mx-1 rounded-full border-1 border-blue-600 dark:bg-gray-600">
                         {% if request.user.user_account.profile_pic %}
                             <img src="{{ request.user.user_account.profile_pic.url }}" class="w-full h-full rounded-full">
                         {% else %}
@@ -66,30 +67,30 @@
                     <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ request.user.email }}</span>
                     </div>
                     <ul class="py-1" aria-labelledby="user-menu-button">
-                    {% if user.is_authenticated %}
-                    <li>
-                        <a href="{% url 'upload_game_view' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Upload Game</a>
-                    </li>
-                    {% if user.user_account.is_developer %}
-                        <li>
-                            <a href="{% url 'developer_profile' request.user.username %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Your Profile</a>
-                        </li>
-                    {% endif %}
-                    <li>
-                        <form method="POST" action="{% url 'handle_logout' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="path" value="{{ request.path }}">
-                            <button type="submit" class="w-full text-left"><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a></button>
-                        </form>
-                    </li>
-                    {% else %}
-                    <li>
-                        <button type="button" class="w-24 text-left"><a href="{% url 'login' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Login</a></button>
-                    </li>
-                    <li>
-                        <button type="button" class="w-24 text-left"><a href="{% url 'signup' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Signup</a></button>
-                    </li>
-                    {% endif %}
+                        {% if user.is_authenticated %}
+                            <li>
+                                <a href="{% url 'upload_game_view' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Upload Game</a>
+                            </li>
+                            {% if user.user_account.is_developer %}
+                                <li>
+                                    <a href="{% url 'developer_profile' request.user.username %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Your Profile</a>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <form method="POST" action="{% url 'handle_logout' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="path" value="{{ request.path }}">
+                                    <button type="submit" class="w-full text-left"><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a></button>
+                                </form>
+                            </li>
+                            {% else %}
+                            <li>
+                                <button type="button" class="w-24 text-left"><a href="{% url 'login' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Login</a></button>
+                            </li>
+                            <li>
+                                <button type="button" class="w-24 text-left"><a href="{% url 'signup' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Signup</a></button>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

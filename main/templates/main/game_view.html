@@ -48,7 +48,7 @@
 {% block body %}
 
 <div class="max-w-5xl mx-auto h-auto">
-    <h1 class="text-5xl font-bold dark:text-white mt-6 mb-2">{{ game.title }}{{ game.id }}</h1>
+    <h1 class="text-5xl font-bold dark:text-white mt-6 mb-2">{{ game.title }}</h1>
     <p class="mb-6 text-lg"><span class="text-white">- </span><a href="{% url 'developer_profile' game.developer.username %}"><span class="text-blue-500 hover:underline cursor-pointer">{{ game.developer.username }}</span></a><span class="text-white text-base"> on {{ game.created_at|date:"d M Y"  }}</span></p>
     <div class="flex">
         <div class="w-4/6">
@@ -56,9 +56,9 @@
             <div class="w-full flex justify-evenly mt-4">
                 <a href="{% url 'serve_game' game.slug %}"><button type="button" class="flex justify-evenly text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><div class="px-2"><img src="{% static 'img/play_arrow.png' %}" class="w-6"></div><div class="px-2">Play</div></button></a> 
                 {% if is_faviorate %}
-                    <a><button id="faviorate-button" type="button" class="flex justify-evenly text-white bg-red-700 hover:bg-red-800 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700"><div class="px-2"><img id="faviorate-btn-img" src="{% static 'img/star_filled.png' %}" class="w-6"></div><div class="px-2">Favorite</div></button></a> 
+                    <a><button id="faviorate-button" type="button" class="flex justify-evenly text-white bg-yellow-600 hover:bg-red-800 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-yellow-600 dark:hover:bg-yellow-700"><div class="px-2"><img id="faviorate-btn-img" src="{% static 'img/star_filled.png' %}" class="w-6"></div><div class="px-2">Favorite</div></button></a> 
                 {% else %}
-                    <a><button id="faviorate-button" type="button" class="flex justify-evenly text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"><div class="px-2"><img id="faviorate-btn-img" src="{% static 'img/star.png' %}" class="w-6"></div><div class="px-2">Faviorate</div></button></a> 
+                    <a><button id="faviorate-button" type="button" class="flex justify-evenly text-white bg-yellow-600 hover:bg-red-800 focus:outline-none focus:ring-4 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-yellow-600 dark:hover:bg-yellow-700"><div class="px-2"><img id="faviorate-btn-img" src="{% static 'img/star.png' %}" class="w-6"></div><div class="px-2">Faviorate</div></button></a> 
                 {% endif %}
                 <a href="#ratings"><button type="button" class="flex justify-evenly text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"><div class="px-2"><img src="{% static 'img/review.png' %}" class="w-6"></div><div class="px-2">Reviews</div></button></a> 
             </div>
@@ -67,7 +67,7 @@
                 <div class="mt-8">
                     <h3 class="text-3xl font-bold dark:text-white">For the Developer</h3>
                     <div class="w-full flex justify-evenly mt-4">
-                        <a href="{% url 'update_game_view' game.slug %}"><button type="button" class="flex justify-evenly text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"><div class="px-2"><img src="{% static 'img/review.png' %}" class="w-6"></div><div class="px-2">Update Game</div></button></a> 
+                        <a href="{% url 'update_game_view' game.slug %}"><button type="button" class="flex justify-evenly text-white bg-orange-700 hover:bg-orange-800 focus:outline-none focus:ring-4 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-orange-600 dark:hover:bg-orange-700"><div class="px-2"><img src="{% static 'img/review.png' %}" class="w-6"></div><div class="px-2">Update Game</div></button></a> 
                         <form id="delete-game-form" method="POST" action="{% url 'delete_game' %}">
                             {% csrf_token %}
                             <input type="hidden" name="game_id" value="{{ game.id }}">
