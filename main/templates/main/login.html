@@ -1,0 +1,26 @@
+{% extends "main/base.html" %}
+
+{% block title %}Login | Edge Games{% endblock %}
+
+{% block body %}
+    <main class="mx-auto flex min-h-screen w-full items-center justify-center bg-transparen text-white">
+        <section class="flex w-[30rem] flex-col space-y-10">
+            <div class="text-center text-4xl font-medium">Log In</div>
+            <form action="{% url 'handle_login' %}" method="POST" class="w-full flex flex-col space-y-10 w-[30rem]">
+                {% csrf_token %}
+                <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-blue-500">
+                    <input required name="username" type="text" placeholder="Username" class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"/>
+                </div>
+
+                <div class="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-blue-500">
+                    <input required name="password" type="password" placeholder="Password" class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"/>
+                </div>
+
+                <button type="submit" class="transform rounded-sm bg-blue-500 py-2 font-bold duration-100 hover:bg-blue-400">LOG IN</button>
+            </form>
+            <p class="text-center text-lg">No account?
+                <a href="{% url 'signup' %}" class="font-medium text-blue-500 underline-offset-4 hover:underline" >Create One</a>
+            </p>
+        </section>
+    </main>
+{% endblock %}

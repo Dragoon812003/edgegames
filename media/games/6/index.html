@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Birds</title>
+    <link rel = "icon" href = "logo.png">
+    <style>
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    color: white;
+    font-size: 30px;
+}
+
+body{
+    margin: 0;
+    overflow: hidden;
+}
+
+#game{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: url('background.png');
+    background-position: center left;
+}
+
+#gameOverScreen{
+    width: 100vw;
+    height: 100vh;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    background: rgba(0, 0 , 0, 0.5); 
+}
+
+#gameOverScreen .title,
+#gameOverScreen #score1,
+#gameOverScreen button{
+    position: absolute;
+    z-index: 1;
+    width: 204px;
+    top: 40%;
+    text-align: center;
+    color: black;
+    transform: translateX(-50%);
+}
+#gameOverScreen #score1{
+    position: relative;
+    top: 50vh;
+    left: 50vw;
+    transform: translateY(-50%);
+}
+#gameOverScreen .title{
+    position: relative;
+    top: 47vh;
+    left: 50vw;
+    font-size: 50px;
+}
+
+#gameOverScreen button{
+    top: 53vh;
+    left: 50vw;
+    position: relative;
+    color: black;
+    font-size: 24px;
+    padding: 5px 25px;
+    cursor: pointer;
+    border: 0;
+}
+
+.block{
+width: 45px;
+height: 100vh;
+background: url('blockbg.jpg');
+background-position: center;
+background-size: contain;
+position: relative;
+left: 1000px;
+}
+
+.hole{
+    width: 43px;
+    height: 193px;
+    background: url('holebg.jpg');
+    background-size: contain;
+    position: relative;
+    top: -500px;
+    background-repeat: no-repeat;
+}
+
+#character{
+    width: 40px;
+    height: 30px;
+    position: absolute;
+    background: url('bird.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    top: 200px;
+    left: 20vw;
+}
+.go-up{
+    animation: rotateUp 0.2s;
+    animation-fill-mode: forwards;
+}
+
+.go-down{
+    animation: rotateDown 0.2s;
+    animation-fill-mode: forwards;
+}
+@keyframes rotateUp{
+    0%{
+        transform: rotate( 0deg );
+    }
+    100%{
+        transform: rotate( -35deg );
+    }
+}
+
+@keyframes rotateDown{
+    0%{
+        transform: rotate( 0deg );
+    }
+    100%{
+        transform: rotate( 35deg );
+    }
+}
+
+#score{
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    color: black;
+}
+
+    </style>
+</head>
+<body>
+    <div id="game">
+        <div id="character"></div>
+        <div class="block"></div>
+        <div class="hole"></div>
+        <div id="score">Score: 0</div>
+        <div id="gameOverScreen" style = "display: none">
+        <h1 class = "title">Game Over</h1>
+        <button id = "button">Play Again</button>
+    </div>
+    </div>
+    <script async src = "127.0.0.1:8000/file/flappy-birds/script.js"></script>
+</body>
+</html>

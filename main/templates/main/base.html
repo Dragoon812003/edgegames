@@ -1,0 +1,255 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="{% static 'img/logo.png' %}" />
+    <title>{% block title %}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    {% block links %}
+    {% endblock %}
+
+    <style>
+    {% block style %}
+    {% endblock %}
+    </style>
+  </head>
+  <body class="bg-gray-800">
+    <nav class="sticky top-0 bg-white border-gray-200 px-2 sm:px-4 py-2.5 dark:bg-gray-900 z-50">
+        <div class="container flex flex-wrap items-center justify-between mx-auto">
+            <div>
+                <a href="{% url 'home' %}" class="flex items-center">
+                    <img src="{% static 'img/logo.png' %}" class="h-6 mr-3 sm:h-9" alt="Flowbite Logo" />
+                    <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Edge Games</span>
+                </a>
+            </div>
+            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="mobile-menu-2">
+                <ul class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                <li>
+                    <a href="{% url 'home' %}" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white" aria-current="page">Home</a>
+                </li>
+                <li>
+                    <a href="{% url 'faviorates_view' %}" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Faviorates</a>
+                </li>
+                <li>
+                    <a href="{% url 'about' %}" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
+                </li>
+                <li>
+                    <a href="{% url 'support' %}" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Support</a>
+                </li>
+                <li>
+                    <a href="{% url 'feedback' %}" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Feedback</a>
+                </li>
+                </ul>
+            </div>
+            <div class="items-center md:order-2">
+                <button id="user-menu-button" type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0">
+                    <div class="inline-flex overflow-hidden relative justify-center items-center w-8 h-8 mx-1 bg-white rounded-full border-2 border-blue-600 dark:bg-gray-600">
+                        {% if request.user.user_account.profile_pic %}
+                            <img src="{{ request.user.user_account.profile_pic.url }}" class="w-full h-full rounded-full">
+                        {% else %}
+                            <div class="inline-flex overflow-hidden relative justify-center items-center w-full h-full bg-white rounded-full border-2 border-blue-600 dark:bg-gray-600">
+                                <span class="text-lg text-blue-600 dark:text-blue-300">{{ request.user.username.0 | capfirst }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </button>
+                <!-- Dropdown menu -->
+                <div id="user-dropdown" class="popup -translate-x-full z-50 absolute hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+                    <div class="px-4 py-3">
+                    <span class="block text-sm text-gray-900 dark:text-white">{{ request.user.username }}</span>
+                    <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ request.user.email }}</span>
+                    </div>
+                    <ul class="py-1" aria-labelledby="user-menu-button">
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'upload_game_view' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Upload Game</a>
+                    </li>
+                    {% if user.user_account.is_developer %}
+                        <li>
+                            <a href="{% url 'developer_profile' request.user.username %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Your Profile</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <form method="POST" action="{% url 'handle_logout' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="path" value="{{ request.path }}">
+                            <button type="submit" class="w-full text-left"><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a></button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li>
+                        <button type="button" class="w-24 text-left"><a href="{% url 'login' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Login</a></button>
+                    </li>
+                    <li>
+                        <button type="button" class="w-24 text-left"><a href="{% url 'signup' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Signup</a></button>
+                    </li>
+                    {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="error-modal" class="popup hidden z-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 md:inset-0 h-modal md:h-full justify-center items-center flex">
+        <div class="relative w-full h-full max-w-md md:h-auto">
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="popup-modal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="p-6 text-center">
+                    <svg aria-hidden="true" class="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h3 id="error-modal-message" class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400"></h3>
+                    <button id="error-modal-btn" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div id="error-modal" class="message popup z-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 md:inset-0 h-modal md:h-full justify-center items-center flex">
+                <div class="relative w-full h-full max-w-md md:h-auto">
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        <button type="button" class="message-close-btn absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="popup-modal">
+                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                        <div class="p-6 text-center">
+                            <svg aria-hidden="true" class="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <h3 id="error-modal-message" class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">{{ message }}</h3>
+                            <button id="error-modal-btn" type="button" class="message-ok-btn text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if request.path != "/upload-game" %}
+        <div id="confirm-modal" class="popup hidden z-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 md:inset-0 h-modal md:h-full justify-center items-center flex" aria-modal="true" role="dialog">
+            <div class="relative p-4 w-full max-w-md h-full z-50 md:h-auto z-1000">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <button id="confirm-close" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-toggle="popup-modal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                    <div class="p-6 text-center">
+                        <svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14 text-gray-400 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 id="confirm-message" class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400"></h3>
+                        <button id="confirm-yes" data-modal-toggle="popup-modal" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">Yes, I'm sure</button>
+                        <button id="confirm-no" data-modal-toggle="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% block body %}
+    {% endblock %}
+
+
+    <script>
+
+        const dropdownToggle = document.getElementById('user-menu-button');
+        const dropdownMenu = document.getElementById('user-dropdown');
+
+        dropdownToggle.addEventListener('click', () => {
+        dropdownMenu.classList.toggle('hidden');
+        dropdownToggle.setAttribute('aria-expanded', !dropdownMenu.classList.contains('hidden'));
+        });
+
+        //Error Modal
+        const errorModal = document.getElementById("error-modal")
+        const errorModalMessage = document.getElementById("error-modal-message")
+        const errorModalBtn = document.getElementById("error-modal-btn")
+
+        function showError(message) {
+            errorModalMessage.innerText = message
+            errorModal.classList.remove("hidden")
+            errorModalBtn.addEventListener('click', () => {
+                errorModal.classList.add("hidden")
+                errorModalMessage.innerText = ""
+            })
+        }
+
+        messages = document.getElementsByClassName('message')
+        messageOkBtn = document.getElementsByClassName('message-ok-btn')
+        messageCloseBtn = document.getElementsByClassName('message-close-btn')
+        for (let i = 0; i < messages.length; i++) {
+            messageOkBtn[i].addEventListener('click', () => {
+                messages[i].classList.add('hidden')
+            })
+
+            messageCloseBtn[i].addEventListener('click', () => {
+                messages[i].classList.add('hidden')
+            })
+        }
+
+        confirmDialog = document.getElementById('confirm-modal')
+        confirmMessage = document.getElementById('confirm-message')
+        confirmYes = document.getElementById('confirm-yes')
+        confirmNo = document.getElementById('confirm-no')
+        confirmClose = document.getElementById('confirm-close')
+
+        showConfirmation = function (element, message, times=1) {
+
+            let clickedTimes = 0
+            element.addEventListener('submit', (event) => {
+                event.preventDefault()
+                
+                confirmDialog.classList.remove('hidden')
+                if (times != 1) {
+                    confirmMessage.innerText = `${message}(${clickedTimes}/${times})`
+                } else {
+                    confirmMessage.innerText = message
+                }
+                
+                confirmYes.addEventListener('click', () => {
+                    clickedTimes++
+                    if (clickedTimes >= times) {
+                        element.submit()
+                    } else if (times != 1) {
+                        confirmMessage.innerText = `${message}(${clickedTimes}/${times})`
+                    }
+                })
+                
+                confirmNo.addEventListener('click', () => {
+                    confirmDialog.classList.add('hidden')
+                    confirmMessage.innerText = ""
+                    clickedTimes = 0
+                })
+                
+                confirmClose.addEventListener('click', () => {
+                    confirmDialog.classList.add('hidden')
+                    confirmMessage.innerText = ""
+                    clickedTimes = o
+                })
+            })
+
+        }
+
+        const popups = document.getElementsByClassName('popup')
+
+        for (popup of popups) {
+            window.addEventListener('keydown', (e) => {
+                if (e.keyCode == 27) {
+                    popup.classList.add("hidden")
+                }
+            })
+        }
+
+    </script>
+
+    <script>
+        {% block script %}
+        {% endblock %}
+    </script>
+  </body>
+</html>
