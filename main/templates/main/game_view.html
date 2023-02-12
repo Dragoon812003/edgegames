@@ -4,40 +4,6 @@
 {% block title %}{{ game.title }} | Edge Games{% endblock %}
 
 {% block style %}
-    /* Container needed to position the overlay. Adjust the width as needed */
-    .container {
-        position: relative;
-        width: 50%;
-        max-width: 300px;
-    }
-
-    /* Make the image to responsive */
-    .image {
-        display: block;
-        width: 100%;
-        height: auto;
-    }
-
-    /* The overlay effect - lays on top of the container and over the image */
-    .overlay {
-        position: absolute;
-        bottom: 0;
-        background: rgb(0, 0, 0);
-        background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.7));
-        color: #f1f1f1;
-        width: 100%;
-        transition: .5s ease;
-        opacity:0;
-        color: white;
-        font-size: 20px;
-        padding: 20px;
-        text-align: center;
-    }
-
-    /* When you mouse over the container, fade in the overlay title */
-    .container:hover .overlay {
-        opacity: 1;
-    }
 
     html {
         scroll-behavior: smooth;
@@ -67,7 +33,7 @@
                 <div class="mt-8">
                     <h3 class="text-3xl font-bold dark:text-white">For the Developer</h3>
                     <div class="w-full flex justify-evenly mt-4">
-                        <a href="{% url 'update_game_view' game.slug %}"><button type="button" class="flex justify-evenly text-white bg-orange-700 hover:bg-orange-800 focus:outline-none focus:ring-4 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-orange-600 dark:hover:bg-orange-700"><div class="px-2"><img src="{% static 'img/review.png' %}" class="w-6"></div><div class="px-2">Update Game</div></button></a> 
+                        <a href="{% url 'update_game_view' game.slug %}"><button type="button" class="flex justify-evenly text-white bg-orange-700 hover:bg-orange-800 focus:outline-none focus:ring-4 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-orange-600 dark:hover:bg-orange-700"><div class="px-2"><img src="{% static 'img/update.png' %}" class="w-6"></div><div class="px-2">Update Game</div></button></a> 
                         <form id="delete-game-form" method="POST" action="{% url 'delete_game' %}">
                             {% csrf_token %}
                             <input type="hidden" name="game_id" value="{{ game.id }}">
@@ -287,12 +253,13 @@
             <div class="flex flex-col items-center">
                 {% for for_game in games %}
                     {% if for_game != game %}
-                        <a href="{% url 'game_view' for_game.slug %}" class="w-3/4">
+                        <div class="w-3/4 mb-6">
                             <div class="container w-full">
-                                <img src="{{ for_game.profile_picture.url }}" class="image">
-                                <div class="overlay cursor-pointer">{{ for_game.title }}</div>
+                                <img src="{{ for_game.profile_picture.url }}" class="">
+                                <a href="{% url 'game_view' for_game.slug %}"><div class="text-white text-2xl pt-2 pb-1 hover:underline">{{ for_game.title }}</div></a>
+                                <div class="text-blue-400 text-lg ml-4">-<span class="hover:underline"><a href="{% url 'developer_profile' for_game.developer.username %}">{{ for_game.developer.username }}</a></span></div>
                             </div>
-                        </a>
+                        </div>
                     {% endif %}
                 {% endfor %}
             </div>

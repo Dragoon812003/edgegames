@@ -57,6 +57,10 @@ def upload_game(request):
 
         mail_admins(f'{game.developer.username} just Uploaded a new Game', f'title: {game.title}, description: {game.description}', False)
         send_mail("Game Upload Succesfull!", f'Dear {game.developer.username} thanks for uploading {game.title}. Your game will appear when it is approved by our reviewers', settings.EMAIL_HOST_USER, [game.developer.email], False)
+        
+        if request.user.user_account.about == None or request.user.user_account.profile_pic == None:
+            messages.success(request, "Your game was uploaded successfully. It will appear in the feed when it is approved by our reviewers. Meanwhile we reccomend you to complete your profile!")
+            return redirect(reverse('developer_profile', args=[request.user.username]))    
         messages.success(request, "Your game was uploaded successfully. It will appear in the feed when it is approved by our reviewers!")
         return redirect(reverse('game_view', args=[game.slug]))
     else:
