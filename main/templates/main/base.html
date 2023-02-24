@@ -14,7 +14,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/logo.png' %}"/>
     {% block links %}
     {% endblock %}
-
+    
     <style>
     {% block style %}
     {% endblock %}
@@ -30,7 +30,7 @@
                 </a>
             </div>
             <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="mobile-menu-2">
-                <ul class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                <ul class="flex flex-col p-4 mt-4 list-none border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
                 <li>
                     <a href="{% url 'home' %}" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white" aria-current="page">Home</a>
                 </li>
@@ -159,6 +159,34 @@
 
     {% block body %}
     {% endblock %}
+
+    
+    <footer class="p-4 mt-24 bg-white rounded-lg shadow md:px-6 md:py-8 dark:bg-gray-900">
+        <div class="sm:flex sm:items-center sm:justify-between">
+            <a href="{% url 'home' %}" class="flex items-center mb-4 sm:mb-0">
+                <img src="{% static 'img/logo.png' %}" class="h-8 mr-3" alt="Edge Games Logo" />
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Edge Games</span>
+            </a>
+            <ul class="flex flex-wrap items-center mb-6 text-sm text-gray-500 sm:mb-0 dark:text-gray-400 list-none">
+                <li>
+                    <a href="{% url 'about' %}" class="mr-4 hover:underline md:mr-6 ">About</a>
+                </li>
+                <li>
+                    <a href="" class="mr-4 hover:underline md:mr-6">Privacy Policy</a>
+                </li>
+                <li>
+                    <a href="{% url 'terms_and_conditions' %}" class="mr-4 hover:underline md:mr-6 ">Terms and Conditions</a>
+                </li>
+                <li>
+                    <a href="{% url 'feedback' %}" class="hover:underline">Feedback</a>
+                </li>
+            </ul>
+        </div>
+        <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+        <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© <a href="http://{{ request.get_host }}" class="hover:underline">Edge Games™</a>. <span>All Rights Reserved.</span>
+        </span>
+    </footer>
+
 
 
     <script>

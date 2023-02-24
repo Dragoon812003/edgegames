@@ -172,12 +172,12 @@
                                         </div>
                                         <div class="flex">
                                             <form class="px-1">
-                                                <button type="button" id="review-edit-btn"><img src="{% static 'img/edit.svg' %}" class="w-6 h-6"></button>
+                                                <button title="Edit Review" type="button" id="review-edit-btn"><img src="{% static 'img/edit.svg' %}" class="w-6 h-6"></button>
                                             </form>
                                             <form id="review-delete-form" method="POST" action="{% url 'delete_review' %}" class="px-1">
                                                 {% csrf_token %}
                                                 <input name="review_id" value="{{ user_review.id }}" type="hidden">
-                                                <button type="submit" id="reivew-delete-btn"><img src="{% static 'img/delete.svg' %}" class="w-6 h-6"></button>
+                                                <button tilte="Delete Review" type="submit" id="reivew-delete-btn"><img src="{% static 'img/delete.svg' %}" class="w-6 h-6"></button>
                                             </form>
                                         </div>
                                     </div>

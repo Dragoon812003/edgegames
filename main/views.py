@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.core.mail import send_mail, mail_admins
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.db.models.signals import pre_delete
@@ -14,7 +15,6 @@ from django.contrib import messages
 from .models import *
 from .utils import *
 import os
-import datetime
 from sendfile import sendfile
 import mimetypes
 from edgegames import settings
@@ -25,6 +25,9 @@ def home(request):
     popular_games = Game.objects.filter(is_approved=True).annotate(num_views=Count('views')).order_by('-num_views')[:5]
     trending_games = Game.objects.filter(is_approved=True).annotate(num_views=Count('views')).order_by('-num_views')[:5]
     return render(request, 'main/index.html', {"pages": [{"heading": "Popular", "data": popular_games}, {"heading": "Trending", "data": trending_games}, {"heading": "All Games", "data": games}]})
+
+def test(request):
+    return render(request, 'main/game-upload-successfull-email.html')
 
 def upload_game(request):
     if request.method == 'POST' and request.user.is_authenticated:
@@ -56,7 +59,9 @@ def upload_game(request):
             game_image.save()
 
         mail_admins(f'{game.developer.username} just Uploaded a new Game', f'title: {game.title}, description: {game.description}', False)
-        send_mail("Game Upload Succesfull!", f'Dear {game.developer.username} thanks for uploading {game.title}. Your game will appear when it is approved by our reviewers', settings.EMAIL_HOST_USER, [game.developer.email], False)
+        # send_mail("Game Upload Succesfull!", f'Dear {game.developer.username} thanks for uploading {game.title}. Your game will appear when it is approved by our reviewers', settings.EMAIL_HOST_USER, [game.developer.email], False)
+        html_mail = render_to_string('main/game-upload-successfull-email.html', {"username": game.developer.username, "today": game.created_at, "slug": game.slug})
+        send_mail('Game Upload Success!', 'Thanks for uploading your game on Edge Games', settings.EMAIL_HOST_USER, [game.developer.email], html_message=html_mail, fail_silently=True)
         
         if request.user.user_account.about == None or request.user.user_account.profile_pic == None:
             messages.success(request, "Your game was uploaded successfully. It will appear in the feed when it is approved by our reviewers. Meanwhile we reccomend you to complete your profile!")
@@ -393,3 +398,6 @@ def about(request):
 
 def support(request):
     return render(request, "main/support.html")
+
+def terms_and_conditions(request):
+    return render(request, "main/terms-and-conditions.html")

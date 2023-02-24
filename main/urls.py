@@ -30,5 +30,7 @@ urlpatterns = [
     path('faviorates', faviorates_view, name="faviorates_view"),
     path('feedback', feedback, name="feedback"),
     path('about', about, name="about"),
+    path('terms-and-conditions', terms_and_conditions, name="terms_and_conditions"),
     path('support', support, name="support"),
+    path('testing', test),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

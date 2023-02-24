@@ -9,7 +9,7 @@
 	<div class="grid grid-cols-5 gap-4 justify-items-center">
 		{% for game in page.data %}
 			<div class="w-60 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-900 dark:border-gray-700">
-				<a href=""><img class="rounded-t-lg" src="{{ game.profile_picture.url }}" alt="" /></a>
+				<a href=""><img class="rounded-t-lg w-64 h-48" src="{{ game.profile_picture.url }}" alt="" /></a>
 				<div class="p-5">
 					<a href=""><h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ game.title }}</h5></a>
     				<p class="mb-6 text-base"><span class="text-white">- </span><a href="{% url 'developer_profile' game.developer.username %}"><span class="text-blue-500 hover:underline cursor-pointer">{{ game.developer.username }}</span></a></p>

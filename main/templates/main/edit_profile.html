@@ -12,13 +12,12 @@
 
             <div class="mb-5 text-center">
 
-				{% if not developer.profile_picture %}
-					<div class="mx-auto w-48 h-48 mb-2 border rounded-full relative bg-gray-100 mb-4 shadow-inset">
-						<div class="inline-flex overflow-hidden relative justify-center items-center w-full h-full bg-white rounded-full border-2 border-blue-600 dark:bg-gray-600">
-                            <span class="text-9xl text-blue-600 dark:text-blue-300">{{ developer.username.0 | capfirst }}</span>
-                        </div>
-					</div>
-				{% endif %}
+				<div id="developer-profile-pic-username" class="mx-auto w-48 h-48 mb-2 border rounded-full relative bg-gray-100 mb-4 shadow-inset">
+					<div class="inline-flex overflow-hidden relative justify-center items-center w-full h-full bg-white rounded-full border-2 border-blue-600 dark:bg-gray-600">
+                        <span class="text-9xl text-blue-600 dark:text-blue-300">{{ developer.username.0 | capfirst }}</span>
+                    </div>
+				</div>
+				<img id="developer-profile-pic-preview" class="hidden mx-auto w-48 h-48 mb-2 border rounded-full relative bg-gray-100 mb-4 shadow-inset" src="">
 								
 				<label for="developer-profile-pic" type="button" class="cursor-pointer inine-flex justify-between items-center focus:outline-none border py-2 px-4 rounded-lg shadow-sm text-left bg-gray-700  text-gray-400 bg-white hover:bg-gray-500 font-medium">
 					<svg xmlns="http://www.w3.org/2000/svg" class="inline-flex flex-shrink-0 w-6 h-6 -mt-1 mr-1" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -40,16 +39,77 @@
             </div>
 
 			<div class="mb-5">
-				<label for="about-input" class="font-bold mb-1 text-gray-400 block">About <span id="game-description-char" class="text-gray-500">(0/500-750)</span></label>
+				<label for="about-input" class="font-bold mb-1 text-gray-400 block">About <span id="about-char" class="text-gray-500">(0/500-750)</span></label>
 				<textarea id="about-input" name="developer_about" rows="4" class="bg-gray-700 resize-none w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-400 font-medium" placeholder="Write something about yourself...">{{ developer.about }}</textarea>
 			</div>
 			
 			<input type="hidden" name="developer_id" value="{{ developer.id }}">
 			<div class="w-full flex justify-center">
-				<button type="submit" class="w-32 focus:outline-none border border-transparent py-2 px-5 rounded-lg shadow-sm text-center text-white bg-blue-500 hover:bg-blue-600 font-medium">Submit</button>
+				<button id="submit-btn" type="submit" class="w-32 focus:outline-none border border-transparent py-2 px-5 rounded-lg shadow-sm text-center text-white bg-blue-500 hover:bg-blue-600 font-medium">Submit</button>
 			</div>
         </div>
 	</form>
 		    
+
+{% endblock %}
+
+{% block script %}
+
+	const developerProfilePicUsername = document.getElementById('developer-profile-pic-username')
+	const developerProfilePreview = document.getElementById('developer-profile-pic-preview')
+	const developerProfilePic = document.getElementById('developer-profile-pic')
+
+	developerProfilePic.addEventListener('change', (e) => {
+		const files = developerProfilePic.files[0];
+		if (files) {
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(files);
+			fileReader.addEventListener("load", function () {
+				developerProfilePreview.src = this.result
+				developerProfilePreview.classList.toggle('hidden')
+				developerProfilePicUsername.classList.toggle('hidden')
+			});    
+		}
+	})
+
+	const aboutInput = document.getElementById('about-input')
+	const aboutChar = document.getElementById('about-char')
+	const submitBtn = document.getElementById('submit-btn')
+
+	function enableSubmitBtn() {
+		submitBtn.classList.remove("bg-gray-600", "hover:bg-gray-600", "cursor-not-allowed")
+		submitBtn.disabled = false
+		submitBtn.classList.add("bg-blue-500", "hover:bg-blue-600", "cursor-pointer")
+	}
+
+	function disableSubmitBtn() {
+		submitBtn.classList.remove("bg-blue-500", "hover:bg-blue-600", "cursor-pointer")
+		submitBtn.setAttribute('disabled', true)
+		submitBtn.classList.add("bg-gray-600", "hover:bg-gray-600", "cursor-not-allowed")
+	}
+
+	disableSubmitBtn()
+	aboutInput.addEventListener('keydown', (e) => {
+		let value = aboutInput.value.split(" ");
+
+		if (value.length > 500) {
+			aboutChar.classList.remove('text-gray-500')
+			aboutChar.classList.remove('text-green-500')
+			aboutChar.classList.add('text-red-500')
+			disableSubmitBtn()
+		} else if (value.length >= 250 && value.length <= 500) {
+			aboutChar.innerText = `(${value.length}/250-500)`
+			aboutChar.classList.remove('text-gray-500')
+			aboutChar.classList.remove('text-red-500')
+			aboutChar.classList.add('text-green-500')
+			enableSubmitBtn()
+		} else {
+			aboutChar.innerText = `(${value.length}/250-500)`
+			aboutChar.classList.remove('text-gray-500')
+			aboutChar.classList.remove('text-green-500')
+			aboutChar.classList.add('text-red-500')
+			disableSubmitBtn()
+		}
+	})
 
 {% endblock %}

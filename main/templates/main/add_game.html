@@ -202,7 +202,7 @@
 								</div>
 								<ul class="mt-5 list-disc">
 									<li class="text-red-500">Make sure your main file is named as "index.html"</li>
-									<li class="mt-3 text-red-500">Change your src tags eg. change this src="script.js" to "http://127.0.0.1:8000/file/game/{your-file-name}"</li>
+									<li class="mt-3 text-red-500">Change your src tags eg. change this src="script.js" to "http://edgegames.pythonanywhere.com/file/<span id="game-slug"></span>/{your-file-name}"</li>
 								</ul>
 								
 							</div>
@@ -244,7 +244,7 @@
 										<div class="flex flex-col items-center justify-center pt-5 pb-6">
 											<svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
 											<p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-											<ul id="game-images-count" class="text-xs text-gray-500 dark:text-gray-400">Add atleast 2 Images of your Game</ul>
+											<ul id="game-images-count" class="text-xs text-gray-500 dark:text-gray-400">Add 2-3 Images of your Game</ul>
 										</div>
 									</label>
 									<input name="game-images" id="game-images-input" type="file" multiple directory="" webkitdirectory="" class="hidden" />
@@ -324,7 +324,6 @@
 	checkBoxInput = document.getElementsByClassName('form-checkbox')
 
 	for (let i = 0; i < checkBoxInput.length; i++) {
-		console.log(checkBoxInput[i].value)
 		checkBoxInput[i].addEventListener('change', ()=> {
 			if (checkBoxInput[i].checked) {
 				checkBoxInput[i].classList.add('checked')
@@ -333,7 +332,6 @@
 				checkBoxInput[i].classList.remove('checked')
 				checkBoxInput[i].value = "no"
 			}
-			console.log(checkBoxInput[i].value)
 		})
 	}
 
@@ -358,6 +356,7 @@
 	const mobileCheckbox = document.getElementById('mobile-checkbox')
 	const tabletCheckbox = document.getElementById('tablet-checkbox')
 	const computerCheckbox = document.getElementById('computer-checkbox')
+	const gameSlugSpan = document.getElementById('game-slug')
 
 	gameTitleInput.addEventListener('keydown', (e) => {
 		let value = gameTitleInput.value;
@@ -371,6 +370,12 @@
 			gameTitleChar.classList.remove('text-red-500')
 			gameTitleChar.classList.add('text-gray-500')
 		}
+	})
+
+	gameTitleInput.addEventListener('keyup', () => {
+		gameTitleInput.value = gameTitleInput.value.replace(/\s\s+/g, ' ');
+		let value = gameTitleInput.value;
+		gameSlugSpan.innerText = value.toLowerCase().replace(/ (?=\S)/g, "-").replace(/\s/, '')
 	})
 
 	gameDescriptionInput.addEventListener('keydown', (e) => {
@@ -406,11 +411,14 @@
 	})
 
 	let containesIndex = false
+	let gameIsInSizeLimit = false
+	let gameSize = 0
 	gameFilesInput.addEventListener('change', (e) => {
 		containesIndex = false
 		const files = gameFilesInput.files;
 		gameFileNames.innerHtml = " "
 		for (file of files) {
+			gameSize += file.size
 			if (file.name == "index.html") containesIndex = true
 			let li = document.createElement('li')
 			gameFileNames.appendChild(li)
@@ -419,6 +427,12 @@
 			gameFileInputDiv.classList.remove("w-full")
 			gameFileInputDiv.classList.add("w-1/2")
 			gameFileNamesDiv.classList.add("w-1/4")
+		}
+
+		if (gameSize < 20000000) {
+			gameIsInSizeLimit = true
+		} else {
+			gameIsInSizeLimit = false
 		}
 	})
 
@@ -482,21 +496,42 @@
 		} else if (step == 2) {
 			if (e.target == gameFilesInput) {
 				if (containesIndex) {
-					canSubmitGameFiles = true
+					if (gameIsInSizeLimit) {
+						canSubmitGameFiles = true
+					} else {
+						canSubmitGameFiles = false
+						showError("The total size of your game cannot be greater than 20MB!")
+						gameFilesInput.value = null
+					}
 				} else {
 					canSubmitGameFiles = false
+					gameFilesInput.value = null
 					showError("Your game files do not contain an index.html file!")
 				}
 			} 
 		} else if (step == 3) {
 			if (e.target == gameImagesInput) {
 				const files = gameImagesInput.files;
+				let imagesSize = 0
 				gameImagesCount.innerText = `${files.length} image/s uploaded`
-				if (files.length >= 2) {
-					canSubmitGameImages = true
-				} else {
+				for (file of files) {
+					imagesSize += file.size
+				}
+
+				if (imagesSize > 1500000) {
+					showError("The total size of all the images cannot be greater than 1.5MB")
+					gameImagesCount.innerText = `Add 2-3 Images of your Game`
 					canSubmitGameImages = false
-					showError("You have to submit a minimum of 2 images!")
+					gameImagesInput.value = null
+				} else {
+					if (files.length >= 2 && files.length <= 3) {
+						canSubmitGameImages = true
+					} else {
+						gameImagesCount.innerText = `Add 2-3 Images of your Game`
+						canSubmitGameImages = false
+						gameImagesInput.value = null
+						showError("You have to submit a minimum of 2 images and a maximum of 3 images!")
+					}
 				}
 			}
 		}
@@ -552,10 +587,6 @@
 		if (!gameFormSubmitBtn.disabled) {
 			confirmDialog.classList.remove('hidden')
             confirmMessage.innerText = "Are you sure you want to submit this Game?"
-
-			for (let i=0; i < checkBoxInput.length; i++) {
-				console.log(checkBoxInput[i].value)
-			}
 
             confirmYes.addEventListener('click', () => {
                 gameUploadForm.submit()
