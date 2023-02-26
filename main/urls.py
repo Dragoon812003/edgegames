@@ -31,6 +31,9 @@ urlpatterns = [
     path('feedback', feedback, name="feedback"),
     path('about', about, name="about"),
     path('terms-and-conditions', terms_and_conditions, name="terms_and_conditions"),
+    path('privacy-policy', privacy_policy, name="privacy_policy"),
     path('support', support, name="support"),
-    path('testing', test),
+    path('test', test),
+    path('approvals', approvals, name="approvals"),
+    path('approve-game', approve_game, name="approve_game"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

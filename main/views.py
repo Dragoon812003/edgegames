@@ -27,8 +27,8 @@ def home(request):
     return render(request, 'main/index.html', {"pages": [{"heading": "Popular", "data": popular_games}, {"heading": "Trending", "data": trending_games}, {"heading": "All Games", "data": games}]})
 
 def test(request):
-    return render(request, 'main/game-upload-successfull-email.html')
-
+    return render(request, "main/game-approved-email.html", {"username": request.user.username, "game": "Space Inaders"})
+    
 def upload_game(request):
     if request.method == 'POST' and request.user.is_authenticated:
 
@@ -61,7 +61,7 @@ def upload_game(request):
         mail_admins(f'{game.developer.username} just Uploaded a new Game', f'title: {game.title}, description: {game.description}', False)
         # send_mail("Game Upload Succesfull!", f'Dear {game.developer.username} thanks for uploading {game.title}. Your game will appear when it is approved by our reviewers', settings.EMAIL_HOST_USER, [game.developer.email], False)
         html_mail = render_to_string('main/game-upload-successfull-email.html', {"username": game.developer.username, "today": game.created_at, "slug": game.slug})
-        send_mail('Game Upload Success!', 'Thanks for uploading your game on Edge Games', settings.EMAIL_HOST_USER, [game.developer.email], html_message=html_mail, fail_silently=True)
+        send_mail('Game Upload Success!', '', settings.EMAIL_HOST_USER, [game.developer.email], html_message=html_mail, fail_silently=True)
         
         if request.user.user_account.about == None or request.user.user_account.profile_pic == None:
             messages.success(request, "Your game was uploaded successfully. It will appear in the feed when it is approved by our reviewers. Meanwhile we reccomend you to complete your profile!")
@@ -375,7 +375,25 @@ def handle_developer_profile(request):
         messages.success(request, "Your profile was updated successfully!")
         return redirect(reverse('developer_profile', args=[developer.username]))
     return redirect(reverse('home'))
+
+def approve_game(request):
+    if request.method == "POST":
+        if request.user.is_superuser:
+            game_id = request.POST.get('game_id')
+            game = Game.objects.get(id=game_id)
+            game.is_approved = True
+            game.save()
+            html_mail = render_to_string('main/game-approved-email.html', {"username": game.developer.username, "game": game.title})
+            send_mail(f"{ game.title } has been approved!", '', settings.EMAIL_HOST_USER, [game.developer.email], html_message=html_mail, fail_silently=True)
+            messages.success(request, f"{game.title} has been approved!")
+    return redirect(reverse('home'))
     
+
+def approvals(request):
+    if request.user.is_superuser:
+        games = Game.objects.filter(is_approved=False)
+        return render(request, 'main/approvals.html', {"games": games})
+    return redirect(reverse('home'))
     
 #Rendering Views
 def upload_game_view(request):
@@ -401,3 +419,6 @@ def support(request):
 
 def terms_and_conditions(request):
     return render(request, "main/terms-and-conditions.html")
+
+def privacy_policy(request):
+    return render(request, "main/privacy-policy.html")

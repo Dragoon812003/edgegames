@@ -67,10 +67,12 @@
 
                 <!-- Dropdown menu -->
                 <div id="user-dropdown" class="popup -translate-x-full z-50 absolute hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-                    <div class="px-4 py-3">
-                    <span class="block text-sm text-gray-900 dark:text-white">{{ request.user.username }}</span>
-                    <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ request.user.email }}</span>
-                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="px-4 py-3">
+                            <span class="block text-sm text-gray-900 dark:text-white">{{ request.user.username }}</span>
+                            <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ request.user.email }}</span>
+                        </div>
+                    {% endif %}
                     <ul class="py-1" aria-labelledby="user-menu-button">
                         {% if user.is_authenticated %}
                             <li>
@@ -79,6 +81,11 @@
                             {% if user.user_account.is_developer %}
                                 <li>
                                     <a href="{% url 'developer_profile' request.user.username %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Your Profile</a>
+                                </li>
+                            {% endif %}
+                            {% if user.is_superuser %}
+                                <li>
+                                    <a href="{% url 'approvals' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Approvals</a>
                                 </li>
                             {% endif %}
                             <li>
@@ -172,7 +179,7 @@
                     <a href="{% url 'about' %}" class="mr-4 hover:underline md:mr-6 ">About</a>
                 </li>
                 <li>
-                    <a href="" class="mr-4 hover:underline md:mr-6">Privacy Policy</a>
+                    <a href="{% url 'privacy_policy' %}" class="mr-4 hover:underline md:mr-6">Privacy Policy</a>
                 </li>
                 <li>
                     <a href="{% url 'terms_and_conditions' %}" class="mr-4 hover:underline md:mr-6 ">Terms and Conditions</a>
