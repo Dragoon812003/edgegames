@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta https-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Castle Fighter 2</title>
+</head>
+
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+    }
+
+    #fighter-1-score{
+        position: absolute;
+        font-size: xxx-large;
+        color: white;
+        top: 25px;
+        right: 450px;
+        user-select: none;
+    }
+
+    #fighter-1-health-bar-outer{
+        position: absolute;
+        width: 400px;
+        height: 25px;
+        background-color: red;
+        top: 25px;
+        right: 25px
+    }
+
+    #fighter-1-health-bar-inner{
+        position: absolute;
+        width: 100%;
+        height: 25px;
+        top: 0px;
+        right: 0px;
+        background-color: yellow;
+    }
+
+    #fighter-1-attack-outer{
+        position: absolute;
+        top: 50px;
+        right: 25px;
+        background-color: chartreuse;
+        width: 300px;
+        height: 25px;
+    }
+
+    #fighter-1-attack-1{
+        top: 50px;
+        right: 25px;
+        background-color: white;
+        width: 100%;
+        height: 12.5px;
+    }
+
+    #fighter-1-attack-2{
+        top: 62.5px;
+        right: 25px;
+        background-color: aqua;
+        width: 100%;
+        height: 12.5px;
+    }
+
+    #fighter-2-score{
+        position: absolute;
+        font-size: xxx-large;
+        color: white;
+        top: 25px;
+        left: 450px;
+        user-select: none;
+    }
+
+    #fighter-2-health-bar-outer{
+        position: absolute;
+        width: 400px;
+        height: 25px;
+        background-color: red;
+        top: 25px;
+        left: 25px
+    }
+
+    #fighter-2-health-bar-inner{
+        position: absolute;
+        width: 100%;
+        height: 25px;
+        top: 0px;
+        left: 0px;
+        background-color: yellow;
+    }
+
+    #fighter-2-attack-outer{
+        position: absolute;
+        top: 50px;
+        left: 25px;
+        background-color: chartreuse;
+        width: 300px;
+        height: 25px;
+    }
+
+    #fighter-2-attack-1{
+        top: 50px;
+        left: 25px;
+        background-color: white;
+        width: 100%;
+        height: 12.5px;
+    }
+
+    #fighter-2-attack-2{
+        top: 62.5px;
+        left: 25px;
+        background-color: aqua;
+        width: 100%;
+        height: 12.5px;
+    }
+
+    #counter{
+        position: absolute;
+        left: 50vw;
+        top: 50vh;
+        transform: translate(-50%, -50%);
+        font-size: 100px;
+        color: white;
+        user-select: none;
+    }
+
+    #game-over-display{
+        position: absolute;
+        left: 50vw;
+        top: 50vh;
+        transform: translate(-50%, -50%);
+        font-size: 50px;
+        color: white;
+        user-select: none;
+        text-align: center;
+    }
+
+    #game-over-btn{
+        position: absolute;
+        left: 50vw;
+        top: 70vh;
+        transform: translate(-50%, -50%);
+        width: 250px;
+        height: 75px;
+        font-size: xx-large;
+    }
+
+    #main-menu{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    #start-button{
+        position: absolute;
+        top: 50vh;
+        left: 75vw;
+        width: 175px;
+        height: 50px;
+        font-size: xx-large;
+    }
+
+    #more-games-button{
+        position: absolute;
+        top: 60vh;
+        left: 75vw;
+        width: 175px;
+        height: 50px;
+        font-size: larger;
+    }
+
+    #exit-btn{
+        position: absolute;
+        top: 70vh;
+        left: 75vw;
+        width: 175px;
+        height: 50px;
+        font-size: xx-large;
+    }
+
+    .btn{
+        background-color: darkmagenta;
+        color: white;
+        border: 4px solid indigo;
+    }
+
+    .btn:hover{
+        background-color: blueviolet
+    }
+
+    .hidden{
+        display: none;
+    }
+
+</style>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <img id="main-menu" src="https://edgegames.pythonanywhere.com/file/castle-fighter-2/main-menu-screen.jpg" class="main-menu-item">
+    <button id="start-button" class="main-menu-item btn">Start</button>
+    <a href="https://edgegames.pythonanywhere.com/developer/MuhammadKamkoriwala"><button id="more-games-button" class="main-menu-item btn">More Games</button></a>
+    <a href="javascript: history.go(-1)"><button id="exit-btn" class="main-menu-item btn">Quit</button></a>
+    <div id="counter"></div>
+    <div id="game-over-display" class="hidden"></div>
+    <button id="game-over-btn" class="hidden btn">Play Again</button>
+    <div id="fighter-1-score" class="game-item hidden">0</div>
+    <div id="fighter-1-health-bar-outer" class="game-item hidden">
+        <div id="fighter-1-health-bar-inner"></div>
+    </div>
+    <div id="fighter-1-attack-outer" class="game-item hidden">
+        <div id="fighter-1-attack-1"></div>
+        <div id="fighter-1-attack-2"></div>
+    </div>
+
+    <div id="fighter-2-health-bar-outer" class="game-item hidden">
+        <div id="fighter-2-health-bar-inner"></div>
+    </div>
+    <div id="fighter-2-attack-outer" class="game-item hidden">
+        <div id="fighter-2-attack-1"></div>
+        <div id="fighter-2-attack-2"></div>
+    </div>
+    <div id="fighter-2-score" class="game-item hidden">0</div>
+    <script src="https://edgegames.pythonanywhere.com/file/castle-fighter-2/main.js"></script>
+</body>
+</html>

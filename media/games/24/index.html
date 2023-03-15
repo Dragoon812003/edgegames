@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://edgegames.pythonanywhere.com/file/space-invaders/style.css">
+    <title>Space Invader</title>
+</head>
+<body>
+    <div id="main-menu">
+        <img id="main-menu-screen-img" src="https://edgegames.pythonanywhere.com/file/space-invaders/main-menu-screen.png" style="width: 100vw; height: 100vh;">
+        <button id="start-btn" style="position: absolute; top: 60vh; left: 33vw; width: 125px; height: 50px; transform: translateX(-50%);">Start</button>
+        <a href="https://edgegames.pythonanywhere.com/developer/MuhammadKamkoriwala"><button id="more-btn" style="position: absolute; top: 60vh; left: 50vw; width: 125px; height: 50px; transform: translateX(-50%);">More</button></a>
+        <a href="javascript: history.go(-1)"><button id="exit-btn" style="position: absolute; top: 60vh; left: 66vw; width: 125px; height: 50px; transform: translateX(-50%);">Quit</button></a>
+    </div>
+    <div id="game" class="hidden">
+        <div id="player"></div>
+        <div id = "score">Score: 0</div>
+        <div id = "accuracy">Accuracy: 100%</div>
+        <hr id = "dottedLine">
+        <div id = "gameOverScreen" style="display: none;">
+            <div id = "title">Game Over</div>
+            <button id = "playBtn">Play Again</button>
+        </div>
+    </div>
+    <script src = "https://edgegames.pythonanywhere.com/file/space-invaders/script.js"></script>
+</body>
+</html>

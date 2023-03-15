@@ -1,0 +1,100 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    overflow: hidden;
+}
+
+#game{
+    width: 100vw;
+    height: 100vh;
+    background: url('https://edgegames.pythonanywhere.com/file/space-invaders/background.png');
+}
+
+#player{
+    width: 30px;
+    height: 30px;
+    left: 50vw;
+    background: url('https://edgegames.pythonanywhere.com/file/space-invaders/spaceship.png');
+    position: absolute;
+    bottom: 100px;
+    z-index: 1;
+}
+
+#score{
+    font-size: xx-large;
+    color: white;
+    padding: 10px;
+    user-select: none;
+}
+
+#accuracy{
+    position: absolute;
+    font-size: xx-large;
+    color: white;
+    padding: 10px;
+    user-select: none;
+}
+#dottedLine{
+    border-top: 1px dotted white;
+    position: absolute;
+    bottom: 25vh;
+    height: 5px;
+    width: 120vw;
+}
+
+.enemy{
+    width: 25px;
+    height: 15px;
+    background: url('https://edgegames.pythonanywhere.com/file/space-invaders/enemy.png');
+    position: absolute;
+    display: inline-block;
+}
+
+.hidden{
+    display: none;
+}
+
+.bullet{
+    width: 15px;
+    height: 25px;
+    background: url('https://edgegames.pythonanywhere.com/file/space-invaders/bullet.png');
+    background-size: cover;
+    position: absolute;
+}
+
+#gameOverScreen{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    top: 0px;
+    left: 0px;
+    user-select: none;
+}
+
+#title{
+    position: absolute;
+    top: 40vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 75px;
+}
+
+#playBtn{
+    position: absolute;
+    top: 60vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    color: black;
+}
+
+button{
+    background-color:darkslategray;
+    font-size: 25px;
+    border: 4px solid teal;
+}
+
+button:hover{
+    background-color:seagreen
+}
