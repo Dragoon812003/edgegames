@@ -24,7 +24,7 @@
                 <div class="relative">
                     <div class="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
                         {% if developer_account.profile_pic %}
-                            <img src="{{developer_account.profile_pic.url }}" class="w-full h-full rounded-full">
+                            <img src="{% url 'serve_user_profile_pic' developer.username %}" class="w-full h-full rounded-full">
                         {% else %}
                             <div class="inline-flex overflow-hidden relative justify-center items-center w-full h-full bg-white rounded-full border-2 border-blue-600 dark:bg-gray-600">
                                 <span class="text-9xl text-blue-600 dark:text-blue-300">{{ developer.username.0 | capfirst }}</span>
@@ -58,7 +58,7 @@
 	        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 justify-items-center">
                 {% for game in games %}
                     <div class="w-60 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-900 dark:border-gray-700">
-                        <a href=""><img class="rounded-t-lg w-64 h-48" src="{{ game.profile_picture.url }}" alt="" /></a>
+                        <a href=""><img class="rounded-t-lg w-64 h-48" src="{% url 'serve_game_profile_pic'  game.slug %}" alt="" /></a>
                         <div class="p-5">
                             <a href=""><h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ game.title }}</h5></a>
                             <p class="mb-6 text-base"><span class="text-white">- </span><a href="{% url 'developer_profile' game.developer.username %}"><span class="text-blue-500 hover:underline cursor-pointer">{{ game.developer.username }}</span></a></p>

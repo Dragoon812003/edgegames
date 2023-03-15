@@ -12,10 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 's9*01o-ucei(@ib^sxhckt#r5ddl_*vw0s7)6@t$$ry8jvl7pa'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-
 
 ADMINS = [('MuhammadKamkoriwala', 'edgeworksind@gmail.com'), ('Muhammad', 'muhammad.k@ahduni.edu.in')]
 

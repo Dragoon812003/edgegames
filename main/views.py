@@ -40,12 +40,13 @@ def upload_game(request):
             title=request.POST['game-title'],
             description=request.POST['game-description'],
             developer=request.user,
-            profile_picture = profile_pic,
             is_available_on_mobile = request.POST.get('is_mobile') == "yes",
             is_available_on_tablet = request.POST.get('is_tablet') == "yes",
             is_available_on_desktop = request.POST.get('is_pc') == "yes",
         )
         
+        game.save()
+        game.profile_picture = profile_pic
         game.save()
         game.developer.user_account.is_developer = True
         game.developer.user_account.save()
@@ -59,7 +60,6 @@ def upload_game(request):
             game_image.save()
 
         mail_admins(f'{game.developer.username} just Uploaded a new Game', f'title: {game.title}, description: {game.description}', False)
-        # send_mail("Game Upload Succesfull!", f'Dear {game.developer.username} thanks for uploading {game.title}. Your game will appear when it is approved by our reviewers', settings.EMAIL_HOST_USER, [game.developer.email], False)
         html_mail = render_to_string('main/game-upload-successfull-email.html', {"username": game.developer.username, "today": game.created_at, "slug": game.slug})
         send_mail('Game Upload Success!', '', settings.EMAIL_HOST_USER, [game.developer.email], html_message=html_mail, fail_silently=True)
         
@@ -178,7 +178,6 @@ def serve_game(request, game_slug):
             return render(request, 'main/error_screen.html', {"status_code": "Not Allowed", "heading": f"This game is not available on any device!", "sub_heading": mark_safe(f"Kindly contact the developer at <a href='mailto:{game.developer.email}'class='text-blue-500 cursor-pointer hover:underline'>{game.developer.email}</a>")})
 
 def serve_game_file(request, game_slug, file_name):
-    print(game_slug, file_name)
     game = get_object_or_404(Game, slug=game_slug)
     game_files = game.gamefile_set.all()
     for game_file in game_files:
@@ -188,6 +187,33 @@ def serve_game_file(request, game_slug, file_name):
         
             return sendfile(request, file_path, mimetype=mimetype)
     return render(request, 'main/error_screen.html', {"status_code": "Not Found", "heading": f"No file with the name {file_name} was found", "sub_heading": "Kindly double check the link"})
+
+def serve_game_img(request, game_slug, img_name):
+    game = get_object_or_404(Game, slug=game_slug)
+    images = game.imagefile_set.all()
+    for image in images: 
+        if image.image.name == f"images/{game.id}/{img_name}":
+            img_path = os.path.join(settings.MEDIA_ROOT, 'images', str(game.id), img_name)
+            mimetype = mimetypes.guess_type(img_path)[0]
+            return sendfile(request, img_path, mimetype=mimetype)
+    return HttpResponse("No Image found!")
+
+def serve_game_profile_pic(request, game_slug):
+    game = get_object_or_404(Game, slug=game_slug)
+    image = game.profile_picture
+    image_name = image.name.split('/')[-1]
+    image_path = os.path.join(settings.MEDIA_ROOT, 'profile_pics', str(game.id), image_name)
+    mimetype = mimetypes.guess_type(image_path)[0]
+    return sendfile(request, image_path, mimetype=mimetype)
+
+def serve_user_profile_pic(request, username):
+    user = get_object_or_404(User, username=username)
+    account = Account.objects.get(user=user)
+    image = account.profile_pic
+    image_name = image.name.split('/')[-1]
+    image_path = os.path.join(settings.MEDIA_ROOT, 'user_profile_pics', str(user.id), image_name)
+    mimetype = mimetypes.guess_type(image_path)[0]
+    return sendfile(request, image_path, mimetype=mimetype)
 
 def handle_login(request):
     if request.method == "POST":
@@ -259,12 +285,18 @@ def game_view(request, game_slug):
         is_faviorate = game in account.faviorates.all()
     else:
         is_faviorate = False
+
+    images = game.imagefile_set.all()
+    img_names = []
+    for image in images:
+        img_names.append(image.image.name.split('/')[-1])
+
     games = Game.objects.filter(is_approved=True)
     stars_1 = reviews.filter(stars=1).count(); stars_2 = reviews.filter(stars=2).count(); stars_3 = reviews.filter(stars=3).count(); stars_4 = reviews.filter(stars=4).count(); stars_5 = reviews.filter(stars=5).count();
     stars_1_perc = math.ceil(stars_1*100/review_count); stars_2_perc = math.ceil(stars_2*100/review_count); stars_3_perc = math.ceil(stars_3*100/review_count); stars_4_perc = math.ceil(stars_4*100/review_count); stars_5_perc = math.ceil(stars_5*100/review_count);
     star_percentages = {"star_1": stars_1_perc, "star_2": stars_2_perc, "star_3": stars_3_perc, "star_4": stars_4_perc, "star_5": stars_5_perc}
     star_info = {"total_stars": total_stars, "review_count": review_count, "avg_stars": avg_stars, "review_stars": review_stars, "stars_percentages": star_percentages}
-    data = {"game": game, "reviews": reviews, "star_info": star_info, "views": views, "images_urls": images_urls, "profile_pic": profile_pic, "games": games, "user_review": user_review, "has_reviewed": has_reviewed, "is_faviorate": is_faviorate}
+    data = {"game": game, "reviews": reviews, "star_info": star_info, "views": views, "img_names": img_names, "profile_pic": profile_pic, "games": games, "user_review": user_review, "has_reviewed": has_reviewed, "is_faviorate": is_faviorate}
     return render(request, 'main/game_view.html', data)
 
 def post_review(request):
@@ -352,7 +384,6 @@ def developer_profile(request, developer_name):
         return render(request, "main/developer_profile.html", {"developer": user, "developer_account": account, "games": games, "review_count": review_count, "avg_stars": avg_stars})
     messages.success(request, f"{user.username} is not a developer!")
     return redirect(reverse('home'))
-    
 
 def edit_profile(request):
     if request.user.is_authenticated:

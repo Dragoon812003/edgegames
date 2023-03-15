@@ -18,7 +18,7 @@
     <p class="mb-6 text-lg"><span class="text-white">- </span><a href="{% url 'developer_profile' game.developer.username %}"><span class="text-blue-500 hover:underline cursor-pointer">{{ game.developer.username }}</span></a><span class="text-white text-base"> on {{ game.created_at|date:"d M Y"  }}</span></p>
     <div class="flex flex-col md:flex-row">
         <div class="w-full md:w-4/6">
-            <img src="{{ profile_pic }}" class="w-full">
+            <img src="{% url 'serve_game_profile_pic'  game.slug %}" class="w-full">
             <div class="w-full flex justify-evenly mt-4">
                 <a href="{% url 'serve_game' game.slug %}"><button type="button" class="flex justify-evenly text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><div class="px-2"><img src="{% static 'img/play_arrow.png' %}" class="w-6"></div><div class="px-2">Play</div></button></a> 
                 {% if is_faviorate %}
@@ -44,8 +44,8 @@
             {% endif %}
 
             <div class="flex mt-8 w-full h-32 overflow-x-auto">
-                {% for image_url in images_urls %}
-                    <img src="{{ image_url }}" class="h-full mr-2">
+                {% for img_name in img_names %}
+                    <img src="{% url 'serve_game_img' game_slug=game.slug img_name=img_name  %}" class="h-full mr-2">
                 {% endfor %}
             </div>
 
@@ -146,7 +146,7 @@
 
                             <div id="user-review" class="review flex items-center">
                                 {% if user_review.user.user_account.profile_pic %}
-                                        <img src="{{ user_review.user.user_account.profile_pic.url }}" class="w-8 h-8 rounded-full">
+                                        <img src="{% url 'serve_user_profile_pic' user_review.user.username %}" class="w-8 h-8 rounded-full">
                                 {% else %}
                                     <div class="inline-flex overflow-hidden relative justify-center items-center w-8 h-8 mx-1 bg-white rounded-full border-2 border-blue-600 dark:bg-gray-600">
                                         <span class="text-xl text-blue-600 dark:text-blue-300">{{ user_review.user.username.0 | capfirst }}</span>
@@ -213,7 +213,7 @@
                                 <div class="review flex items-center">
                                     <div class="inline-flex overflow-hidden relative justify-center items-center w-8 h-8 mx-1 bg-white rounded-full border-2 border-blue-600 dark:bg-gray-600">
                                         {% if review.user.user_account.profile_pic %}
-                                            <img src="{{ review.user.user_account.profile_pic.url }}" class="w-full h-full rounded-full">
+                                            <img src="{% url 'serve_user_profile_pic' review.user.username %}" class="w-full h-full rounded-full">
                                         {% else %}
                                             <div class="inline-flex overflow-hidden relative justify-center items-center w-full h-full bg-white rounded-full border-2 border-blue-600 dark:bg-gray-600">
                                                 <span class="text-xl text-blue-600 dark:text-blue-300">{{ review.user.username.0 | capfirst }}</span>
@@ -255,7 +255,7 @@
                     {% if for_game != game %}
                         <div class="w-3/4 mb-6">
                             <div class="container w-full">
-                                <img src="{{ for_game.profile_picture.url }}" class="">
+                                <img src="{% url 'serve_game_profile_pic'  for_game.slug %}" class="">
                                 <a href="{% url 'game_view' for_game.slug %}"><div class="text-white text-2xl pt-2 pb-1 hover:underline">{{ for_game.title }}</div></a>
                                 <div class="text-blue-400 text-lg ml-4">-<span class="hover:underline"><a href="{% url 'developer_profile' for_game.developer.username %}">{{ for_game.developer.username }}</a></span></div>
                             </div>

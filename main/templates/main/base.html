@@ -53,7 +53,7 @@
                     <div class="inline-flex overflow-hidden relative justify-center items-center w-10 h-10 mx-1 rounded-full border-1 border-blue-600 dark:bg-gray-600">
                         {% if request.user.is_authenticated %}
                             {% if request.user.user_account.profile_pic %}
-                                <img src="{{ request.user.user_account.profile_pic.url }}" class="w-full h-full rounded-full">
+                                <img src="{% url 'serve_user_profile_pic' request.user.username %}" class="w-full h-full rounded-full">
                             {% else %}
                                 <div class="inline-flex overflow-hidden relative justify-center items-center w-full h-full bg-white rounded-full border-2 border-blue-600 dark:bg-gray-600">
                                     <span class="text-lg text-blue-600 dark:text-blue-300">{{ request.user.username.0 | capfirst }}</span>
