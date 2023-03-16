@@ -16,7 +16,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-ADMINS = [('MuhammadKamkoriwala', 'edgeworksind@gmail.com'), ('Muhammad', 'muhammad.k@ahduni.edu.in')]
+# ADMINS = [('MuhammadKamkoriwala', 'edgeworksind@gmail.com'), ('Muhammad', 'muhammad.k@ahduni.edu.in')]
 
 # Application definition
 
