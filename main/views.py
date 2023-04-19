@@ -60,7 +60,7 @@ def upload_game(request):
             game_image.save()
 
         mail_admins(f'{game.developer.username} just Uploaded a new Game', f'title: {game.title}, description: {game.description}', False)
-        html_mail = render_to_string('main/game-upload-successfull-email.html', {"username": game.developer.username, "today": game.created_at, "slug": game.slug})
+        html_mail = render_to_string('main/emails/game-upload-successfull-email.html', {"username": game.developer.username, "today": game.created_at, "slug": game.slug})
         send_mail('Game Upload Success!', '', settings.EMAIL_HOST_USER, [game.developer.email], html_message=html_mail, fail_silently=True)
         
         if request.user.user_account.about == None or request.user.user_account.profile_pic == None:
@@ -126,10 +126,11 @@ def game_delete(sender, instance, **kwargs):
 def delete_game(request):
     game_id = request.POST.get("game_id")
     game = get_object_or_404(Game, id=game_id)
-    if request.method == "POST" and request.user == game.developer:
-        game.delete()
-        messages.success(request, f"{game.title} was deleted successfully!")
-    return redirect(reverse('home'))
+    if request.method == "POST":
+        if request.user == game.developer or request.user.is_superuser:
+            game.delete()
+            messages.success(request, f"{game.title} was deleted successfully!")
+        return redirect(reverse('home'))
     
 def update_game_view(request, game_slug):
     game = Game.objects.get(slug = game_slug)
@@ -418,7 +419,7 @@ def approve_game(request):
             game = Game.objects.get(id=game_id)
             game.is_approved = True
             game.save()
-            html_mail = render_to_string('main/game-approved-email.html', {"username": game.developer.username, "game": game.title})
+            html_mail = render_to_string('main/emails/game-approved-email.html', {"username": game.developer.username, "game": game.title})
             send_mail(f"{ game.title } has been approved!", '', settings.EMAIL_HOST_USER, [game.developer.email], html_message=html_mail, fail_silently=True)
             messages.success(request, f"{game.title} has been approved!")
     return redirect(reverse('home'))

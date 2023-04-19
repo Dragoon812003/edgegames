@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astroieds</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            border: 0;
+            overflow: hidden;
+        }
+
+        #game-over-screen{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #play-again-btn{
+            position: relative;
+            top: 60vh;
+            left: 50vw;
+            transform: translate(-50%, -50%);
+        }
+
+        button{
+            width: 125px;
+            height: 50px;
+            font-size: x-large;
+            background-color: blueviolet;
+            border: 2px solid black;
+        }  
+
+        button:hover{
+            background-color: darkmagenta;
+        }
+
+        #main-menu{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #main-menu-image{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #start-game-btn{
+            position: absolute;
+            top: 50vh;
+            left: 75vw;
+        }
+
+        #more-games-btn{
+            position: absolute;
+            top: 60vh;
+            left: 75vw;
+            font-size: large;
+        }
+
+        #exit-game-btn{
+            position: absolute;
+            top: 70vh;
+            left: 75vw;
+        }
+        
+        .hidden{
+            display: none !important;
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="game-over-screen" class="hidden game-over-screen-item">
+        <button id="play-again-btn" onclick="restartGame()" class="hidden game-over-screen-item">Play Again</button>
+    </div>
+    <div id="main-menu" class="main-menu-item">
+        <img id="main-menu-image" src="https://edgegames.pythonanywhere.com/file/asteroids/main-menu-image.jpg" class="main-menu-item">
+        <button id="start-game-btn" onclick="startGame()" class="main-menu-item">Start</button>
+        <a href="https://edgegames.pythonanywhere.com/developer/MuhammadKamkoriwala"><button id="more-games-btn" class="main-menu-item">More Games</button></a>
+        <a href="javascript: history.go(-1)"><button id="exit-game-btn" class="main-menu-item">Quit</button></a>
+    </div>
+    <script src="https://edgegames.pythonanywhere.com/file/asteroids/script.js"></script>
+</body>
+</html>

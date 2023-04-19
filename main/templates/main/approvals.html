@@ -1,4 +1,5 @@
-{% extends "main/base.html" %}
+{% extends "main/base.html" %}\
+{% load static %}
 
 {% block title %} Approvals | Edge Games {% endblock %}
 
@@ -23,10 +24,10 @@
                         <input name="game_id" type="hidden" value="{{ game.id }}">
                         <button type="submit" class="justify-self-end bg-blue-500 px-2 py-1 text-white mx-1 rounded-sm hover:bg-blue-600">Accept</button>
                     </form>
-                    <form id="delete-form" method="POST" action="">
-                        <input name="game_id" type="hidden" value="{{ game.id }}">
-                        <button type="submit"><img src="{% static 'img/delete.png' %}"></button>
+                    <form id="delete-form" method="POST" action="{% url 'delete_game' %}">
                         {% csrf_token %}
+                        <input name="game_id" type="hidden" value="{{ game.id }}">
+                        <button type="submit"><img src="{% static 'img/delete.svg' %}" class="h-8 w-8"></button>
                     </form>
                 </div>
             </div>
@@ -37,4 +38,7 @@
 {% block script %}
     approveForm = document.getElementById('aprroval-form')
     showConfirmation(approveForm, "Are you sure you want to  approve this game?")
+
+    deleteForm = document.getElementById('delete-form')
+    showConfirmation(deleteForm, "Are you sure you want to delete this game?", 3)
 {% endblock %}
