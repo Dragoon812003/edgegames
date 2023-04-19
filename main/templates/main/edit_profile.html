@@ -6,7 +6,7 @@
 
 {% block body %}
 	
-	<form action="{% url 'handle_developer_profile' %}" method="POST" enctype="multipart/form-data">
+	<form id="developer-profile-form" action="{% url 'handle_developer_profile' %}" method="POST" enctype="multipart/form-data">
 		{% csrf_token %}
 		<div class="max-w-3xl mx-auto px-4 py-10">
 
@@ -43,6 +43,26 @@
 				<textarea id="about-input" name="developer_about" rows="4" class="bg-gray-700 resize-none w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-400 font-medium" placeholder="Write something about yourself...">{{ developer.about }}</textarea>
 			</div>
 			
+			<div class="mb-5">
+				<label for="instgram-input" class="font-bold mb-1 text-gray-400 block">Instagram</label>
+				<input id="instagram-input" type="text" name="instagram-link" class="bg-gray-700 w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-400 font-medium" placeholder="Enter your Instagram Link here...">
+			</div>
+
+			<div class="mb-5">
+				<label for="twitter-input" class="font-bold mb-1 text-gray-400 block">Twitter</label>
+				<input id="twitter-input" type="text" name="twitter-link" class="bg-gray-700 w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-400 font-medium" placeholder="Enter your Twitter Link here...">
+			</div>
+
+			<div class="mb-5">
+				<label for="linkedin-input" class="font-bold mb-1 text-gray-400 block">LinkedIn</label>
+				<input id="linkedin-input" type="text" name="linkedin-link" class="bg-gray-700 w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-400 font-medium" placeholder="Enter your LinkedIn Link here...">
+			</div>
+
+			<div class="mb-5">
+				<label for="github-input" class="font-bold mb-1 text-gray-400 block">GitHub</label>
+				<input id="github-input" type="text" name="github-link" class="bg-gray-700 w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-400 font-medium" placeholder="Enter your GitHub Link here...">
+			</div>
+			
 			<input type="hidden" name="developer_id" value="{{ developer.id }}">
 			<div class="w-full flex justify-center">
 				<button id="submit-btn" type="submit" class="w-32 focus:outline-none border border-transparent py-2 px-5 rounded-lg shadow-sm text-center text-white bg-blue-500 hover:bg-blue-600 font-medium">Submit</button>
@@ -54,6 +74,9 @@
 {% endblock %}
 
 {% block script %}
+
+	const developerProfileForm = document.getElementById('developer-profile-form')
+	showConfirmation(developerProfileForm, "Are you sure you want to update your profile?")
 
 	const developerProfilePicUsername = document.getElementById('developer-profile-pic-username')
 	const developerProfilePreview = document.getElementById('developer-profile-pic-preview')

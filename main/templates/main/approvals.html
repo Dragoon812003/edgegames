@@ -23,6 +23,11 @@
                         <input name="game_id" type="hidden" value="{{ game.id }}">
                         <button type="submit" class="justify-self-end bg-blue-500 px-2 py-1 text-white mx-1 rounded-sm hover:bg-blue-600">Accept</button>
                     </form>
+                    <form id="delete-form" method="POST" action="">
+                        <input name="game_id" type="hidden" value="{{ game.id }}">
+                        <button type="submit"><img src="{% static 'img/delete.png' %}"></button>
+                        {% csrf_token %}
+                    </form>
                 </div>
             </div>
         {% endfor %}

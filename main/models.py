@@ -59,6 +59,10 @@ class Account(models.Model):
     is_developer = models.BooleanField(default=False)
     profile_pic = models.ImageField(upload_to=user_profile_picture_path, blank=True, null=True)
     about = models.TextField(blank=True, null=True)
+    instagram_link = models.CharField(blank=True, null=True, max_length=100)
+    twitter_link = models.CharField(blank=True, null=True, max_length=100)
+    linkedin_link = models.CharField(blank=True, null=True, max_length=100)
+    github_link = models.CharField(blank=True, null=True, max_length=100)
 
 @cleanup.ignore
 class Review(models.Model):
@@ -73,7 +77,7 @@ class Review(models.Model):
         return self.user.username + ": " + self.comment
 
     def get_account(user):
-        return Account.objects.get(user=user)
+        return Account.objects.get(user=user) 
 
 pre_save.connect(slug_generator, sender=Game)
 

@@ -145,7 +145,6 @@ def serve_game(request, game_slug):
     if (request.user_agent.is_mobile and game.is_available_on_mobile) or (request.user_agent.is_pc and game.is_available_on_desktop) or (request.user_agent.is_tablet and game.is_available_on_tablet):
         game_html = None
         for game_file in game_files:
-            print(game_file.file.name)
             if game_file.file.name == f"games/{game.id}/index.html":
                 game_html = game_file.file
 
@@ -158,7 +157,6 @@ def serve_game(request, game_slug):
                 if IpModel.objects.filter(ip=ip).exists():
                     game.views.add(IpModel.objects.get(ip=ip))
                 else:
-                    print("dosen't exists")
                     IpModel.objects.create(ip=ip)
                     game.views.add(IpModel.objects.get(ip=ip))
                 
@@ -270,7 +268,6 @@ def game_view(request, game_slug):
     game = get_object_or_404(Game, slug=game_slug)
     reviews = Review.objects.filter(game=game)
     total_stars = 0
-    images_urls = [img.image.url for img in game.imagefile_set.all()]
     profile_pic = game.profile_picture.url
     for review in reviews:
         total_stars += review.stars
@@ -397,11 +394,18 @@ def handle_developer_profile(request):
     developer = get_object_or_404(User, id=developer_id)
     if request.method == "POST" and request.user == developer:
         developer_profile_pic = request.FILES.get('developer_profile_pic')
-        print(developer_profile_pic)
         developer_about = request.POST.get('developer_about')
+        instagram_link = request.POST.get('instagram-link')
+        twitter_link = request.POST.get('twitter-link')
+        linkedin_link = request.POST.get('linkedin-link')
+        github_link = request.POST.get('github-link')
         account = Account.objects.get(user=developer)
         account.profile_pic = developer_profile_pic
         account.about = developer_about
+        account.instagram_link = instagram_link or None
+        account.twitter_link = twitter_link or None
+        account.linkedin_link = linkedin_link or None
+        account.github_link = github_link or None
         account.save()
         messages.success(request, "Your profile was updated successfully!")
         return redirect(reverse('developer_profile', args=[developer.username]))
