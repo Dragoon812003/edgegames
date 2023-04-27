@@ -50,8 +50,8 @@
             </div>
             <div class="items-center md:order-2">
                 <button id="user-menu-button" type="button" class="flex mr-3 text-sm rounded-full md:mr-0">
-                    <div class="inline-flex overflow-hidden relative justify-center items-center w-10 h-10 mx-1 rounded-full border-1 border-blue-600 dark:bg-gray-600">
-                        {% if request.user.is_authenticated %}
+                    {% if request.user.is_authenticated %}
+                        <div class="inline-flex overflow-hidden relative justify-center items-center w-10 h-10 mx-1 rounded-full border-1 border-blue-600 dark:bg-gray-600">
                             {% if request.user.user_account.profile_pic %}
                                 <img src="{% url 'serve_user_profile_pic' request.user.username %}" class="w-full h-full rounded-full">
                             {% else %}
@@ -59,10 +59,13 @@
                                     <span class="text-lg text-blue-600 dark:text-blue-300">{{ request.user.username.0 | capfirst }}</span>
                                 </div>
                             {% endif %}
-                        {% else %}
-                                <img src="{% static 'img/no_profile.png' %}" class="w-full h-full rounded-full">
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% else %}
+                        {% url 'login' as login_url %}
+                        {% url 'signup' as signup_url %}
+                        {% if request.path != login_url %}<button type="button" class="focus:outline-none text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-white hover:bg-gray-100"><a href="{% url 'login' %}">Log In</a></button>{% endif %}
+                        {% if request.path != signup_url %}<button type="button" class="text-white focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center bg-blue-600 hover:bg-blue-700"><a href="{% url 'signup' %}" class="flex">Sign Up<svg aria-hidden="true" class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></a></button>{% endif %}
+                    {% endif %}
                 </button>
 
                 <!-- Dropdown menu -->
@@ -94,13 +97,6 @@
                                     <input type="hidden" name="path" value="{{ request.path }}">
                                     <button type="submit" class="w-full text-left"><a class="block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white focus:outline-none">Sign out</a></button>
                                 </form>
-                            </li>
-                            {% else %}
-                            <li class="w-32">
-                                <button type="button" class="w-full text-left"><a href="{% url 'login' %}" class="w-full block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">Login</a></button>
-                            </li>
-                            <li class="w-32">
-                                <button type="button" class="w-full text-left"><a href="{% url 'signup' %}" class="w-full block px-4 py-2 text-sm hover:bg-gray-600 text-gray-200 hover:text-white">Signup</a></button>
                             </li>
                         {% endif %}
                     </ul>

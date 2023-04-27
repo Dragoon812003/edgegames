@@ -17,6 +17,7 @@
                 </div>
 
                 <button type="submit" class="transform rounded-sm bg-blue-500 py-2 font-bold duration-100 hover:bg-blue-400">LOG IN</button>
+                <input name="redirect-url" type="hidden" value="{{ redirect_url }}">
             </form>
             <p class="text-center text-lg">No account?
                 <a href="{% url 'signup' %}" class="font-medium text-blue-500 underline-offset-4 hover:underline" >Create One</a>

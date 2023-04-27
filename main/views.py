@@ -12,6 +12,7 @@ from django.dispatch import receiver
 from django.dispatch import receiver
 from django.db.models import Count
 from django.contrib import messages
+from urllib.parse import urlparse
 from .models import *
 from .utils import *
 import os
@@ -222,6 +223,8 @@ def handle_login(request):
         if user is not None:
             login(request, user)
             messages.success(request, "Successfully Logged In!")
+            redirect_url = request.POST.get('redirect-url')
+            return redirect(urlparse(redirect_url).path)
         else:
             messages.success(request, "Incorrect Username or Password!")
             return redirect(reverse('login'))
@@ -237,7 +240,10 @@ def handle_signup(request):
         account.save()
         login(request, user)
         messages.success(request, "Your Edge Games account was created successfully!")
-    return redirect(reverse('home'))
+        redirect_url = request.POST.get('redirect-url')
+        return redirect(urlparse(redirect_url).path)
+    else:
+        return redirect(reverse('home'))
 
 def signingup(request):
     if request.method == "POST":
@@ -439,10 +445,14 @@ def upload_game_view(request):
         return redirect(reverse('home'))
 
 def login_view(request):
-    return render(request, 'main/login.html')
+    previous_url = request.META.get('HTTP_REFERER')
+    if not (previous_url and urlparse(previous_url).hostname == request.get_host().split(":")[0]) or urlparse(previous_url).path == reverse('login') or urlparse(previous_url).path == reverse('signup'): previous_url = reverse('home')
+    return render(request, 'main/login.html', {"redirect_url": previous_url})
 
 def signup_view(request):
-    return render(request, 'main/signup.html')
+    previous_url = request.META.get('HTTP_REFERER')
+    if not (previous_url and urlparse(previous_url).hostname == request.get_host().split(":")[0]) or urlparse(previous_url).path == reverse('login') or urlparse(previous_url).path == reverse('signup'): previous_url = reverse('home')
+    return render(request, 'main/signup.html', {"redirect_url": previous_url})
 
 def feedback(request):
     return render(request, "main/feedback.html")
