@@ -262,7 +262,7 @@ def signingup(request):
                 data = {'status': 'success', "message": "Username is available!", "username": username}
             return JsonResponse(data, safe=False)
     else:
-        return redirect('/signup')
+        return redirect(reverse('home'))
 
 def handle_logout(request):
     if request.method == "POST":
