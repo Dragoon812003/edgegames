@@ -4,7 +4,7 @@ from .models import *
 
 # Register your models here.
 
-admin.site.register((Game, GameFile, ImageFile, Review, IpModel))
+admin.site.register((Game, GameFile, ImageFile, Review, IpModel, FAQ))
 
 class AccountInLine(admin.StackedInline):
     model = Account

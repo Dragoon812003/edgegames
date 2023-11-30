@@ -26,7 +26,7 @@
                 {% else %}
                     <a><button id="faviorate-button" type="button" class="flex justify-evenly text-white bg-yellow-600 hover:bg-red-800 focus:outline-none focus:ring-4 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-yellow-600 dark:hover:bg-yellow-700"><div class="px-2"><img id="faviorate-btn-img" src="{% static 'img/star.png' %}" class="w-6"></div><div class="px-2">Faviorate</div></button></a> 
                 {% endif %}
-                <a href="#ratings"><button type="button" class="flex justify-evenly text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"><div class="px-2"><img src="{% static 'img/review.png' %}" class="w-6"></div><div class="px-2">Reviews</div></button></a> 
+                <a><button id="share-btn" class="flex justify-evenly text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"><div class="px-2"><img src="{% static 'img/share.png' %}" class="w-6"></div><div class="px-2">Share</div></button></a> 
             </div>
 
             {% if request.user == game.developer %}
@@ -351,6 +351,19 @@
                 }
             }
         })
+    })
+
+    shareBtn = document.getElementById('share-btn')
+    shareBtn.addEventListener('click', () => {
+        if (navigator.share) {
+            navigator.share({
+                title: "{{ game.title }}",
+                text: "🚀 Play games instantly on Edge Games! 🎮 No downloads, just pure fun in your browser🌐.\n\n",
+                url: "{{ request.build_absolute_uri }}"
+            })
+            .then(() => {})
+            .catch(error => console.error('Error sharing:', error));
+        }
     })
 
     //Edit Review

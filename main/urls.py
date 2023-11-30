@@ -34,7 +34,7 @@ urlpatterns = [
     path('about', about, name="about"),
     path('terms-and-conditions', terms_and_conditions, name="terms_and_conditions"),
     path('privacy-policy', privacy_policy, name="privacy_policy"),
-    path('support', support, name="support"),
+    path('faqs', faqs, name="faqs"),
     path('test', test),
     path('approvals', approvals, name="approvals"),
     path('approve-game', approve_game, name="approve_game"),

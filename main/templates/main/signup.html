@@ -22,11 +22,6 @@
                     <input required id="email-input" name="email" type="email" placeholder="E-Mail" class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"/>
                 </div>
 
-                <div id="email-message" class="message hidden flex p-4 mb-1 bg-red-100 border-t-4 border-red-500 dark:bg-red-200" role="alert">
-                    <svg id="email-info" class="flex-shrink-0 w-5 h-5 text-red-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-                    <div id="email-content" class="ml-3 text-sm font-medium text-red-700"></div>
-                </div>
-
                 <div class="w-full transform border-b-2 bg-transparent text-lg duration-100 focus-within:border-blue-500">
                     <input required id="password-input" name="password" type="password" placeholder="Password" class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"/>
                 </div>
@@ -36,18 +31,21 @@
                         <input required id="confirm-password-input" type="password" placeholder="Confirm Password" class="w-full border-none bg-transparent outline-none placeholder:italic focus:outline-none"/>
                     </div>
                     
-                    <div id="confirm-password-message" class="message hidden flex p-4 mb-4 border-red-500" role="alert">
+                    <div id="confirm-password-message" class="hidden flex p-4 mb-4 border-red-500" role="alert">
                         <svg id="confirm-password-info" class="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
                         <div id="confirm-password-content" class="ml-3 text-sm font-medium text-red-700"></div>
                     </div>
                 </div>
+                
+                <div class="flex items-center">
+                    <input id="agreement-checkbox" type="checkbox" value="" class="w-4 h-4 rounded text-blue-600 border-gray-600">
+                    <label for="agreement-checkbox" class="ms-2 text-sm font-medium text-gray-300">I agree to the <a href="{% url 'terms_and_conditions' %}" class="text-blue-500 hover:underline">Terms and Conditions</a> and the <a href="{% url 'privacy_policy' %}" class="text-blue-500 hover:underline">Privacy Policy</a>.</label>
+                </div>
 
                 <input name="redirect-url" type="hidden" value="{{ redirect_url }}">
-                <button id="signup-form-btn" type="submit" class="transform rounded-sm bg-blue-500 py-2 font-bold duration-100 hover:bg-blue-400">SIGN UP</button>
+                <button id="signup-form-btn" type="submit" class="transform rounded-sm bg-blue-500 py-2 font-bold duration-100 hover:bg-blue-400">Sign Up</button>
             </form>
-            <p class="text-center text-lg">Already have an account?
-            <a href="{% url 'login' %}" class="font-medium text-blue-500 underline-offset-4 hover:underline" >Log In</a>
-            </p>
+            <p class="text-center text-lg">Already have an account? <a href="{% url 'login' %}" class="font-medium text-blue-500 underline-offset-4 hover:underline" >Log In</a></p>
         </section>
     </main>
 {% endblock %}
@@ -56,15 +54,18 @@
 
     const usernameInput = document.getElementById('username-input');
     const emailInput = document.getElementById('email-input');
-    const passwordInput = document.getElementById('password-input')
-    const confirmPasswordInput = document.getElementById('confirm-password-input')
-    const signUpFom = document.getElementById('signup-form');
+    const passwordInput = document.getElementById('password-input');
+    const confirmPasswordInput = document.getElementById('confirm-password-input');
+    const signUpForm = document.getElementById('signup-form');
+    const signUpFormBtn = document.getElementById('signup-form-btn');
+    const agreementCheckbox = document.getElementById('agreement-checkbox');
     const $ = jQuery.noConflict();
 
     let canSubmitUsername = false;
     let canSubmitEmail = true;
     let canSubmitPassword = false;
     let canSubmitConfirmPassword = false;
+    let canSubmitAgreementCheckbox = false;
 
     const debounce = (func, delay) => {
       let debounceTimer
@@ -159,9 +160,18 @@
     confirmPasswordInput.addEventListener('input', passwordConfirmation)
     passwordInput.addEventListener('input', passwordConfirmation)
 
+    //Handling Agrremnt checkbox
+    agreementCheckbox.addEventListener('input', function () {
+        if (agreementCheckbox.checked) {
+            canSubmitAgreementCheckbox = true
+        } else {
+            canSubmitAgreementCheckbox = false
+        }
+    })
+
     setInterval(function() {
 
-        if (canSubmitUsername && canSubmitConfirmPassword) {
+        if (canSubmitUsername && canSubmitConfirmPassword && canSubmitAgreementCheckbox) {
             $('#signup-form-btn').prop('disabled', false);
             $('#signup-form-btn').removeClass('bg-gray-500');
             $('#signup-form-btn').addClass('bg-blue-500 hover:bg-blue-400');

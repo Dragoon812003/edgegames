@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="{% static 'img/logo.png' %}" />
     <title>{% block title %}{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{% static 'tailwindcss/tailwindcss.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/logo.png' %}"/>
@@ -30,22 +30,61 @@
                 </a>
             </div>
             <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="mobile-menu">
+                {% url 'home' as home_url %}
+                {% url 'faviorates_view' as faviorates_url %}
+                {% url 'about' as about_url %}
+                {% url 'faqs' as faqs_url %}
+                {% url 'feedback' as feedback_url %}
                 <ul class="flex flex-col p-4 mt-4 list-none border rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 bg-gray-800 bg-gray-900 border-gray-700">
-                    <li>
-                        <a href="{% url 'home' %}" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white" aria-current="page">Home</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'faviorates_view' %}" class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700">Faviorates</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'about' %}" class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700">About</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'support' %}" class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700">Support</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'feedback' %}" class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700">Feedback</a>
-                    </li>
+                    {% if request.path == home_url %}
+                        <li>
+                            <a href="{% url 'home' %}" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white" aria-current="page">Home</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'home' %}" class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700">Home</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% if request.path == faviorates_url %}
+                        <li>
+                            <a href="{% url 'faviorates_view' %}" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white" aria-current="page">Faviorates</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'faviorates_view' %}" class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700">Faviorates</a>
+                        </li>
+                    {% endif %}
+
+                    {% if request.path == about_url %}
+                        <li>
+                            <a href="{% url 'about' %}" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white" aria-current="page">About</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'about' %}" class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700">About</a>
+                        </li>
+                    {% endif %}
+
+                    {% if request.path == faqs_url %}
+                        <li>
+                            <a href="{% url 'faqs' %}" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white" aria-current="page">FAQ's</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'faqs' %}" class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700">FAQ's</a>
+                        </li>
+                    {% endif %}
+
+                    {% if request.path == feedback_url %}
+                        <li>
+                            <a href="{% url 'feedback' %}" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white" aria-current="page">Feedback</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'feedback' %}" class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700">Feedback</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
             <div class="items-center md:order-2">
@@ -108,7 +147,7 @@
     <div id="error-modal" class="popup hidden z-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 md:inset-0 h-modal md:h-full justify-center items-center flex">
         <div class="relative w-full h-full max-w-md md:h-auto">
             <div class="relative rounded-lg shadow bg-gray-700">
-                <button type="button" class="absolute top-3 right-2.5 bg-transparent hover:bg-gray-200 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white" data-modal-hide="popup-modal">
+                <button type="button" id="error-modal-close-btn" class="absolute top-3 right-2.5 bg-transparent hover:bg-gray-200 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white" data-modal-hide="popup-modal">
                     <svg aria-hidden="true" class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     <span class="sr-only">Close modal</span>
                 </button>
@@ -123,7 +162,7 @@
 
     {% if messages %}
         {% for message in messages %}
-            <div id="error-modal" class="message popup z-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 md:inset-0 h-modal md:h-full justify-center items-center flex">
+            <div class="message popup z-50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 md:inset-0 h-modal md:h-full justify-center items-center flex">
                 <div class="relative w-full h-full max-w-md md:h-auto">
                     <div class="relative rounded-lg shadow bg-gray-700">
                         <button type="button" class="message-close-btn absolute top-3 right-2.5 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white" data-modal-hide="popup-modal">
@@ -132,8 +171,8 @@
                         </button>
                         <div class="p-6 text-center">
                             <svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <h3 id="error-modal-message" class="mb-5 text-lg font-normal text-gray-400">{{ message }}</h3>
-                            <button id="error-modal-btn" type="button" class="message-ok-btn text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">Ok</button>
+                            <h3 class="mb-5 text-lg font-normal text-gray-400">{{ message }}</h3>
+                            <button type="button" class="message-ok-btn text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">Ok</button>
                         </div>
                     </div>
                 </div>
@@ -198,14 +237,15 @@
         const dropdownMenu = document.getElementById('user-dropdown');
 
         dropdownToggle.addEventListener('click', () => {
-        dropdownMenu.classList.toggle('hidden');
-        dropdownToggle.setAttribute('aria-expanded', !dropdownMenu.classList.contains('hidden'));
+            dropdownMenu.classList.toggle('hidden');
+            dropdownToggle.setAttribute('aria-expanded', !dropdownMenu.classList.contains('hidden'));
         });
 
         //Error Modal
         const errorModal = document.getElementById("error-modal")
         const errorModalMessage = document.getElementById("error-modal-message")
         const errorModalBtn = document.getElementById("error-modal-btn")
+        const errorModalCloseBtn = document.getElementById('error-modal-close-btn')
 
         function showError(message) {
             errorModalMessage.innerText = message
@@ -214,11 +254,17 @@
                 errorModal.classList.add("hidden")
                 errorModalMessage.innerText = ""
             })
+
+            errorModalCloseBtn.addEventListener('click', () => {
+                errorModal.classList.add("hidden")
+                errorModalMessage.innerText = ""
+            })
         }
 
         messages = document.getElementsByClassName('message')
         messageOkBtn = document.getElementsByClassName('message-ok-btn')
         messageCloseBtn = document.getElementsByClassName('message-close-btn')
+
         for (let i = 0; i < messages.length; i++) {
             messageOkBtn[i].addEventListener('click', () => {
                 messages[i].classList.add('hidden')

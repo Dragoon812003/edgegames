@@ -72,13 +72,14 @@
     user-select: none;
 }
 
-#title{
+#game-over-text{
     position: absolute;
     top: 40vh;
     left: 50vw;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 75px;
+    font-size: 50px;
+    text-align: center;
 }
 
 #playBtn{
@@ -87,6 +88,21 @@
     left: 50vw;
     transform: translate(-50%, -50%);
     color: black;
+}
+
+#leaderboard-screen{
+    width: 100vw;
+    height: 100vh;
+    background: url('https://edgegames.pythonanywhere.com/file/space-invaders/background.png');
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-item{
+    color: white;
+    font-size: 20px;
 }
 
 button{

@@ -14,6 +14,7 @@ from django.db.models import Count
 from django.contrib import messages
 from urllib.parse import urlparse
 from .models import *
+from apis.models import Score
 from .utils import *
 import os
 from sendfile import sendfile
@@ -25,7 +26,7 @@ def home(request):
     games = Game.objects.filter(is_approved=True)
     popular_games = Game.objects.filter(is_approved=True).annotate(num_views=Count('views')).order_by('-num_views')[:5]
     trending_games = Game.objects.filter(is_approved=True).annotate(num_views=Count('views')).order_by('-num_views')[:5]
-    return render(request, 'main/index.html', {"pages": [{"heading": "Popular", "data": popular_games}, {"heading": "Trending", "data": trending_games}, {"heading": "All Games", "data": games}]})
+    return render(request, 'main/index.html', {"pages": [{"heading": "Trending", "data": trending_games}, {"heading": "Popular", "data": popular_games}, {"heading": "All Games", "data": games}]})
 
 def test(request):
     return render(request, "main/game-approved-email.html", {"username": request.user.username, "game": "Space Inaders"})
@@ -110,7 +111,7 @@ def update_game(request):
             game_image.save()
 
         game.save()
-        messages.success(request, "your game has been updated successfully!")
+        messages.success(request, "Your game has been updated successfully!")
         return redirect(reverse('game_view', args=[game.slug]))
     else:
         return redirect(reverse('home'))
@@ -224,6 +225,19 @@ def handle_login(request):
             login(request, user)
             messages.success(request, "Successfully Logged In!")
             redirect_url = request.POST.get('redirect-url')
+
+            if 'highest_score' in request.session:
+                game_slug = request.session['game_slug']
+                score = request.session['highest_score']
+                game = Game.objects.get(slug=game_slug)
+                player_score = Score.objects.filter(user=user, game=game)
+                for item in player_score:
+                    item.delete()
+                new_score = Score.objects.create(score=score, user=user, game=game)
+                new_score.save()
+
+                return redirect(reverse('serve_game', args=[game.slug]))
+            
             return redirect(urlparse(redirect_url).path)
         else:
             messages.success(request, "Incorrect Username or Password!")
@@ -241,6 +255,16 @@ def handle_signup(request):
         login(request, user)
         messages.success(request, "Your Edge Games account was created successfully!")
         redirect_url = request.POST.get('redirect-url')
+
+        if 'highest_score' in request.session:
+                game_slug = request.session['game_slug']
+                score = request.session['highest_score']
+                game = Game.objects.get(slug=game_slug)
+                new_score = Score.objects.create(score=score, user=user, game=game)
+                new_score.save()
+
+                return redirect(reverse('serve_game', args=[game.slug]))
+
         return redirect(urlparse(redirect_url).path)
     else:
         return redirect(reverse('home'))
@@ -429,13 +453,16 @@ def approve_game(request):
             send_mail(f"{ game.title } has been approved!", '', settings.EMAIL_HOST_USER, [game.developer.email], html_message=html_mail, fail_silently=True)
             messages.success(request, f"{game.title} has been approved!")
     return redirect(reverse('home'))
-    
 
 def approvals(request):
     if request.user.is_superuser:
         games = Game.objects.filter(is_approved=False)
         return render(request, 'main/approvals.html', {"games": games})
     return redirect(reverse('home'))
+
+def faqs(request):
+    faqs = FAQ.objects.all()
+    return render(request, "main/support.html", {"faqs": faqs})
     
 #Rendering Views
 def upload_game_view(request):
@@ -459,9 +486,6 @@ def feedback(request):
 
 def about(request):
     return render(request, "main/about.html")
-
-def support(request):
-    return render(request, "main/support.html")
 
 def terms_and_conditions(request):
     return render(request, "main/terms-and-conditions.html")

@@ -79,5 +79,14 @@ class Review(models.Model):
     def get_account(user):
         return Account.objects.get(user=user) 
 
+@cleanup.ignore
+class FAQ(models.Model):
+    question = models.CharField(max_length=128)
+    answer = models.CharField(max_length=3000)
+    tab = models.CharField(max_length=16)
+
+    def __str__(self):
+        return self.question
+
 pre_save.connect(slug_generator, sender=Game)
 

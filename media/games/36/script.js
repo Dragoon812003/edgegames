@@ -4,8 +4,12 @@ var playBtn = document.getElementById('playBtn');
 var gameOverScreen = document.getElementById('gameOverScreen')
 var accuracy = document.getElementById('accuracy');
 var startBtn = document.getElementById('start-btn');
-var mainMenu = document.getElementById('main-menu')
-var mainMenuScreenImg = document.getElementById('main-menu-screen-img')
+var mainMenu = document.getElementById('main-menu');
+var scoresElem = document.getElementById('scores-div')
+var leaderboardScreen = document.getElementById('leaderboard-screen')
+var mainMenuScreenImg = document.getElementById('main-menu-screen-img');
+var highScoreMenuText = document.getElementById('high-score-menu-text');
+var gameOverText = document.getElementById('game-over-text');
 var gameOver = true;
 var BackgroundMusic = new Audio('https://edgegames.pythonanywhere.com/file/space-invaders/BackgroundMusic.mp3');
 var explosion = new Audio('https://edgegames.pythonanywhere.com/file/space-invaders/explosion.mp3');
@@ -27,9 +31,38 @@ var scoreValue = 0;
 
 //Start Game
 
+function handleDisplayScore(data) {
+    if (data.is_authenticated) {
+        highScoreMenuText.innerHTML = `Welcome ${data.username} <br> Your High Score: ${data.highest_score}`
+    }
+}
+
+function handleHighScores(data) {
+    highScores = data.high_scores
+    
+    for (score of highScores) {
+        scoresElem.innerHTML += `<div class="score-item">${score.rank}) ${score.user}: ${score.score}</div>`
+    }
+}
+
+get_high_scores(10, handleHighScores)
+
+function showLeaderboard() {
+    mainMenu.classList.add('hidden')
+    leaderboardScreen.classList.remove('hidden')
+}
+
+function handleLeaderboardBack() {
+    leaderboardScreen.classList.add('hidden')
+    mainMenu.classList.remove('hidden')
+}
+
+get_info(handleDisplayScore)
+
 startBtn.addEventListener('click', function () {
     mainMenu.classList.add('hidden')
-    mainMenuScreenImg.style.width = "0px;"
+    mainMenuScreenImg.style.width = "0px"
+    leaderboardScreen.style.display = "none"
     game.classList.remove('hidden')
     gameOver = false
     BackgroundMusic.play()
@@ -52,6 +85,7 @@ function resetRound() {
         i--;
     }
 }
+
 playBtn.addEventListener('click', resetRound)
 
 // Player Variables
@@ -104,6 +138,15 @@ function enemyLoop() {
     }
 }
 
+function handleScore(data) {
+    if (data.is_highest_score) {
+        gameOverText.innerText = "Congratulations! You set a global High Score!"
+        gameOverText.classList.add("size-50")
+    } else if (data.is_players_highest_score) {
+        gameOverText.innerText = "Congratulations! You set your personal Best Score!"
+    }
+}
+
 var enemyMoving = setInterval(function () {
     var enemy = document.getElementsByClassName("enemy");
 
@@ -148,6 +191,7 @@ var enemyMoving = setInterval(function () {
                 gameOver = true;
                 gameOverScreen.style.display = '';
                 gameOverSound.play()
+                add_score(scoreValue, handleScore)
             }
         }
 
@@ -222,9 +266,9 @@ for (let i = 0; i < enemyColl.length; i++) {
 //Accuracy
 if (noOfTimesBulletTriggered == 0) {
     accuracyValue = 100
-} else {
-    var accuracyValue = scoreValue/noOfTimesBulletTriggered*100;
-}
-accuracy.innerText = "Accuracy: " + Math.trunc(accuracyValue) + "%";
+    } else {
+        var accuracyValue = scoreValue/noOfTimesBulletTriggered*100;
+    }
+    accuracy.innerText = "Accuracy: " + Math.trunc(accuracyValue) + "%";
 
 },1000/60)
