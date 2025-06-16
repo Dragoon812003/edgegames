@@ -5,7 +5,7 @@
 - 🧑‍💻 Developers can upload their own games with full static asset support.
 - 🧠 A custom high-score API tracks user and global records in real-time.
 
-Built with **Django** and **SQLite**, Edge Games handles file uploads, routing, session management, and JavaScript-based API integrations — all without external libraries or frameworks.
+Built with **Django** and **SQLite**, Edge Games handles file uploads, routing, session management, and JavaScript-based API integrations.
 
 ---
 
